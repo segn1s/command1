@@ -130,6 +130,11 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
+}
+
+.desktop-sidebar {
+  display: none;
 }
 
 .app-shell {
@@ -143,19 +148,32 @@ h3 {
   flex-direction: column;
 }
 
-@media (min-width: 540px) {
+@media (min-width: 540px) and (max-width: 859px) {
   .desktop-backdrop {
-    padding: 20px 12px;
+    padding: 20px 16px;
   }
   .app-shell {
-    max-width: 460px;
-    min-height: 840px;
-    padding: 16px 16px 28px;
+    max-width: 680px;
+    min-height: 820px;
+    padding: 20px 22px 28px;
     border-radius: var(--radius-pane);
-    background: rgb(var(--white-rgb) / 0.42);
+    background: rgb(var(--white-rgb) / 0.48);
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow-pane);
   }
+}
+
+.home-desktop-head,
+.city-desktop-grid,
+.city-right-col,
+.owl-desktop-grid,
+.owl-side-col,
+.profile-desktop-grid,
+.profile-left-col,
+.profile-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .screen {
@@ -551,6 +569,22 @@ select:focus-visible {
   display: block;
 }
 
+.owl-mascot-layer {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  width: 48%;
+  height: auto;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.owl-mascot-layer.is-excited {
+  transform: translate(-50%, -56%) scale(1.06);
+}
+
 .room-hotspot {
   position: absolute;
   width: 26px;
@@ -563,6 +597,7 @@ select:focus-visible {
   font-size: 15px;
   line-height: 1;
   cursor: pointer;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -619,6 +654,19 @@ select:focus-visible {
   gap: 4px;
 }
 
+.profile-avatar-stack {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.profile-owl-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
 .profile-avatar-lg {
   width: 72px;
   height: 72px;
@@ -632,7 +680,6 @@ select:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
 }
 
 .profile-id {
@@ -1318,6 +1365,12 @@ select:focus-visible {
   border: 2px solid var(--gray-200);
 }
 
+.shop-owl-preview {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
 /* Три в ряд 7x7 */
 .m3-active-area {
   display: flex;
@@ -1690,4 +1743,228 @@ select:focus-visible {
 .toast.is-warning .toast-dot {
   background: var(--warning);
   box-shadow: 0 0 0 4px rgb(var(--warning-rgb) / 0.15);
+}
+
+/* Отдельная полноэкранная адаптация для ПК (>= 860px) */
+@media (min-width: 860px) {
+  .desktop-backdrop {
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 264px;
+    flex-shrink: 0;
+    height: 100dvh;
+    position: sticky;
+    top: 0;
+    padding: 20px 16px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-right: 1px solid var(--glass-border);
+  }
+
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 6px;
+  }
+
+  .sidebar-owl-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .sidebar-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-link {
+    position: relative;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: var(--radius-control);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    background: rgb(var(--white-rgb) / 0.65);
+    color: var(--text);
+  }
+
+  .nav-link.active {
+    background: rgb(var(--white-rgb) / 0.85);
+    color: var(--brand);
+    font-weight: 600;
+  }
+
+  .nav-link.active::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 7px;
+    bottom: 7px;
+    width: 3px;
+    background: var(--now);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .sidebar-user-card {
+    margin-top: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sidebar-user-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .sidebar-user-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .app-shell {
+    flex: 1;
+    max-width: 1240px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    padding: 28px 36px 40px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .screen {
+    gap: 20px;
+  }
+
+  .home-topbar,
+  .home-bottom-actions {
+    display: none;
+  }
+
+  .home-desktop-head {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .home-hero h1 {
+    font-size: 1.875rem;
+  }
+
+  .islands-cluster {
+    gap: 16px;
+  }
+
+  .island-svg-wrap {
+    width: 146px;
+    height: 118px;
+  }
+
+  .island-svg-wrap svg {
+    width: 146px;
+    height: 118px;
+  }
+
+  .city-desktop-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .city-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .owl-desktop-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .owl-room-container {
+    max-width: 430px;
+  }
+
+  .owl-side-col {
+    gap: 16px;
+  }
+
+  .owl-bottom-grid {
+    margin-top: 0;
+  }
+
+  .profile-desktop-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .events-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .podium-grid {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+
+  .rating-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (min-width: 1140px) {
+  .islands-cluster {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

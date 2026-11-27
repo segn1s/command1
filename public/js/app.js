@@ -104,6 +104,8 @@ function createInitialState() {
     lastMatch3PlayedDate: null,
     lastMatch3Earned: 0,
     ownedDecor: [
+      'owl-cozy-mug',
+      'owl-welcome-cap',
       'wall-fog',
       'light-day',
       'chair-blue',
@@ -112,6 +114,7 @@ function createInitialState() {
       'rug-brand'
     ],
     equippedDecor: {
+      owlStyle: 'owl-cozy-mug',
       wallColor: 'wall-fog',
       lighting: 'light-day',
       chair: 'chair-blue',
@@ -199,6 +202,11 @@ function navigateTo(screenId) {
   document.querySelectorAll('.screen').forEach((s) => s.classList.remove('active'));
   const target = document.getElementById(`screen-${screenId}`);
   if (target) target.classList.add('active');
+  document.querySelectorAll('.desktop-sidebar .nav-link').forEach((btn) => {
+    const matches =
+      btn.dataset.nav === screenId || (screenId === 'city' && btn.dataset.nav === 'home');
+    btn.classList.toggle('active', matches);
+  });
   renderAll();
 }
 
@@ -264,6 +272,24 @@ async function verifySubmittedCode(submitted) {
 }
 
 /* ---------- Отрисовка экранов ---------- */
+function getEquippedOwlFile() {
+  const item = DECOR_SHOP.owlStyle.items.find((i) => i.id === state.equippedDecor.owlStyle);
+  return item?.file || '/assets/owls/owl-cozy-mug.svg';
+}
+
+function renderSidebar() {
+  const totalAP = getTotalAP();
+  const league = getLeagueByAP(totalAP);
+  const nickEl = document.getElementById('sidebar-nickname');
+  if (!nickEl) return;
+  nickEl.textContent = state.profile.nickname;
+  document.getElementById('sidebar-xp').textContent = `${totalAP} XP`;
+  document.getElementById('sidebar-coins').textContent = String(getCoinsBalance());
+  document.getElementById('sidebar-league').textContent = league.name;
+  const sideOwl = document.getElementById('sidebar-owl-img');
+  if (sideOwl) sideOwl.src = getEquippedOwlFile();
+}
+
 function renderHome() {
   const totalAP = getTotalAP();
   const league = getLeagueByAP(totalAP);
@@ -271,6 +297,7 @@ function renderHome() {
   document.getElementById('home-total-xp').textContent = `${totalAP} XP`;
   document.getElementById('home-total-coins').textContent = String(getCoinsBalance());
   document.getElementById('home-league-short').textContent = league.name.replace(' Owl', '');
+  renderSidebar();
 
   Object.keys(CITIES).forEach((cityId) => {
     const wrap = document.getElementById(`home-svg-${cityId}`);
@@ -324,6 +351,11 @@ function renderOwlHouse() {
     DECOR_SHOP,
     owlMood
   );
+  const mascotEl = document.getElementById('owl-room-mascot');
+  if (mascotEl) {
+    mascotEl.src = getEquippedOwlFile();
+    mascotEl.classList.toggle('is-excited', owlMood === 'excited');
+  }
   const m3Sub = document.getElementById('owl-match3-subtitle');
   if (m3Sub) {
     m3Sub.textContent = hasPlayedMatch3Today() ? 'Сыграно сегодня' : '1 игра в день · на совики';
@@ -357,6 +389,8 @@ function renderProfile() {
   const leagueRank = leaguePeers.findIndex((s) => s.isMe) + 1;
 
   document.getElementById('profile-avatar-circle').textContent = getInitials(state.profile.nickname);
+  const profOwl = document.getElementById('profile-owl-img');
+  if (profOwl) profOwl.src = getEquippedOwlFile();
   document.getElementById('profile-nickname').textContent = state.profile.nickname;
   document.getElementById('profile-id-line').textContent = `ID: ${state.profile.id}`;
 
@@ -583,8 +617,11 @@ function openShop(slot = 'wallColor') {
     const equipped = state.equippedDecor[currentShopSlot] === item.id;
     const card = document.createElement('div');
     card.className = `shop-item-card ${equipped ? 'equipped' : ''}`;
+    const previewHtml = item.file
+      ? `<img src="${item.file}" class="shop-owl-preview" alt="${item.name}" />`
+      : `<span class="swatch-preview" style="background: ${item.swatch};"></span>`;
     card.innerHTML = `
-      <span class="swatch-preview" style="background: ${item.swatch};"></span>
+      ${previewHtml}
       <strong>${item.name}</strong>
       <span class="diary-meta">${owned ? 'В наличии' : `${item.price} совиков`}</span>
       <button class="${equipped ? 'btn-secondary' : 'btn-primary'} btn-sm full-width" type="button" ${equipped ? 'disabled' : ''}>
@@ -685,6 +722,16 @@ function init() {
     btn.addEventListener('click', () => navigateTo(btn.dataset.back));
   });
 
+  document.querySelectorAll('.desktop-sidebar .nav-link').forEach((btn) => {
+    btn.addEventListener('click', () => navigateTo(btn.dataset.nav));
+  });
+
+  document.getElementById('btn-sidebar-search').addEventListener('click', () => {
+    renderStudentSearch('');
+    openModal('modal-search');
+  });
+  document.getElementById('btn-sidebar-verify').addEventListener('click', () => openVerifyModal());
+
   document.getElementById('btn-open-profile').addEventListener('click', () => navigateTo('profile'));
   document.getElementById('btn-open-calendar').addEventListener('click', () => navigateTo('calendar'));
   document.getElementById('btn-open-rating').addEventListener('click', () => navigateTo('rating'));
@@ -699,18 +746,23 @@ function init() {
   });
 
   const owlMessages = [
-    ['Приветствуем в «Астросовье»', 'Нажмите на сову для совета или настройте цвет стен, свет и мебель комнаты.'],
+    ['Приветствуем в «Астросовье»', 'Нажмите на сову для совета или настройте образ совы, цвет стен, свет и интерьер комнаты.'],
     ['Совет по развитию', 'Подтвердите участие в событии из афиши с помощью 6-значного кода, чтобы получить XP и совики.'],
-    ['Оформление комнаты', 'Меняйте цвет стен, освещение и декор с помощью кнопок под комнатой или значков «+».']
+    ['Оформление комнаты', 'Меняйте сову, цвет стен, освещение и декор с помощью кнопок под комнатой или значков «+».']
   ];
   let owlMsgIdx = 0;
-  document.getElementById('owl-speech-card').addEventListener('click', () => {
+  const triggerOwlReaction = () => {
     owlMsgIdx = (owlMsgIdx + 1) % owlMessages.length;
     owlMood = owlMood === 'happy' ? 'excited' : 'happy';
     document.getElementById('owl-speech-title').textContent = owlMessages[owlMsgIdx][0];
     document.getElementById('owl-speech-text').textContent = owlMessages[owlMsgIdx][1];
     renderOwlHouse();
-  });
+  };
+  document.getElementById('owl-speech-card').addEventListener('click', triggerOwlReaction);
+  const mascotLayer = document.getElementById('owl-room-mascot');
+  if (mascotLayer) {
+    mascotLayer.addEventListener('click', triggerOwlReaction);
+  }
 
   document.querySelectorAll('[data-slot]').forEach((btn) => {
     btn.addEventListener('click', () => openShop(btn.dataset.slot));

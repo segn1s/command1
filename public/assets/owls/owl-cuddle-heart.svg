@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="bgGlow4" cx="50%" cy="54%" r="48%">
+      <stop offset="0%" stop-color="#FCE7F3" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#E0F2FE" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="floorShadow4" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.2"/>
+      <stop offset="70%" stop-color="#1E3A8A" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bodyGrad4" cx="46%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="55%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </radialGradient>
+    <radialGradient id="bellyGrad4" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="68%" stop-color="#F0F9FF"/>
+      <stop offset="100%" stop-color="#BAE6FD"/>
+    </radialGradient>
+    <radialGradient id="faceMask4" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E0F2FE"/>
+    </radialGradient>
+    <linearGradient id="beakGrad4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="wingGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+    <radialGradient id="heartGrad4" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FDA4AF"/>
+      <stop offset="50%" stop-color="#FB7185"/>
+      <stop offset="100%" stop-color="#E11D48"/>
+    </radialGradient>
+    <filter id="softDrop4" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1E3A8A" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <circle cx="300" cy="315" r="270" fill="url(#bgGlow4)"/>
+  <g>
+    <path d="M132 185 C132 175, 118 175, 118 187 C118 197, 132 206, 132 206 C132 206, 146 197, 146 187 C146 175, 132 175, 132 185 Z" fill="#FB7185" opacity="0.85" transform="rotate(-15 132 190)"/>
+    <path d="M472 170 C472 161, 460 161, 460 172 C460 180, 472 188, 472 188 C472 188, 484 180, 484 172 C484 161, 472 161, 472 170 Z" fill="#F472B6" opacity="0.85" transform="rotate(14 472 175)"/>
+    <path d="M158 135 Q164 135 164 127 Q164 135 170 135 Q164 135 164 143 Q164 135 158 135 Z" fill="#FBBF24"/>
+    <path d="M442 238 Q448 238 448 230 Q448 238 454 238 Q448 238 448 246 Q448 238 442 238 Z" fill="#FBBF24"/>
+  </g>
+  <ellipse cx="300" cy="516" rx="142" ry="24" fill="url(#floorShadow4)"/>
+  <g filter="url(#softDrop4)">
+    <g id="feet4">
+      <ellipse cx="244" cy="505" rx="14" ry="11" fill="url(#beakGrad4)"/>
+      <ellipse cx="262" cy="508" rx="15" ry="12" fill="url(#beakGrad4)"/>
+      <ellipse cx="279" cy="505" rx="13" ry="10" fill="url(#beakGrad4)"/>
+      <ellipse cx="260" cy="503" rx="6" ry="3.5" fill="#FEF9C3" opacity="0.75"/>
+      <ellipse cx="321" cy="505" rx="13" ry="10" fill="url(#beakGrad4)"/>
+      <ellipse cx="338" cy="508" rx="15" ry="12" fill="url(#beakGrad4)"/>
+      <ellipse cx="356" cy="505" rx="14" ry="11" fill="url(#beakGrad4)"/>
+      <ellipse cx="336" cy="503" rx="6" ry="3.5" fill="#FEF9C3" opacity="0.75"/>
+    </g>
+    <g transform="rotate(-2.5 300 320)">
+      <path d="M168 242 C160 162, 215 118, 300 118 C385 118, 440 162, 432 242 C456 302, 452 418, 404 470 C365 506, 235 506, 196 470 C148 418, 144 302, 168 242 Z" fill="url(#bodyGrad4)"/>
+      <path d="M186 168 C156 142, 166 112, 198 130 Z" fill="#2563EB"/>
+      <path d="M414 168 C444 142, 434 112, 402 130 Z" fill="#2563EB"/>
+      <path d="M284 120 C288 96, 302 94, 304 114 C310 96, 324 102, 316 120 Z" fill="#60A5FA"/>
+      <path d="M196 318 C196 264, 240 248, 300 248 C360 248, 404 264, 404 318 C416 396, 385 478, 300 484 C215 478, 184 396, 196 318 Z" fill="url(#bellyGrad4)"/>
+      <path d="M300 158 C265 136, 192 148, 184 210 C178 260, 232 288, 300 286 C368 288, 422 260, 416 210 C408 148, 335 136, 300 158 Z" fill="url(#faceMask4)"/>
+      <path d="M216 216 C228 190, 266 190, 278 216" stroke="#0F172A" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M214 210 L206 204" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M222 200 L216 192" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M322 216 C334 190, 372 190, 384 216" stroke="#0F172A" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M386 210 L394 204" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M378 200 L384 192" stroke="#0F172A" stroke-width="4.5" stroke-linecap="round"/>
+      <ellipse cx="204" cy="242" rx="22" ry="12" fill="#FDA4AF" opacity="0.8"/>
+      <ellipse cx="396" cy="242" rx="22" ry="12" fill="#FDA4AF" opacity="0.8"/>
+      <line x1="196" y1="238" x2="192" y2="246" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+      <line x1="205" y1="238" x2="201" y2="246" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+      <line x1="395" y1="238" x2="391" y2="246" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+      <line x1="404" y1="238" x2="400" y2="246" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+      <path d="M287 234 C287 227, 313 227, 313 234 C313 244, 304 252, 300 252 C296 252, 287 244, 287 234 Z" fill="url(#beakGrad4)"/>
+      <ellipse cx="297" cy="233" rx="5" ry="2.2" fill="#FEF9C3" opacity="0.85"/>
+      <g id="heart4" transform="translate(300, 392)">
+        <path d="M0 -34 C0 -58, -46 -64, -54 -30 C-62 4, 0 46, 0 46 C0 46, 62 4, 54 -30 C46 -64, 0 -58, 0 -34 Z" fill="url(#heartGrad4)"/>
+        <path d="M-36 -34 C-38 -44, -24 -48, -16 -42" stroke="#FFE4E6" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+      </g>
+      <path d="M162 288 C122 330, 134 408, 202 418 C236 422, 266 408, 268 390 C270 374, 240 366, 218 358 C198 350, 184 318, 162 288 Z" fill="url(#wingGrad4)"/>
+      <path d="M174 315 C156 346, 166 390, 208 398" stroke="#93C5FD" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.45"/>
+      <path d="M438 288 C478 330, 466 408, 398 418 C364 422, 334 408, 332 390 C330 374, 360 366, 382 358 C402 350, 416 318, 438 288 Z" fill="url(#wingGrad4)"/>
+      <path d="M426 315 C444 346, 434 390, 392 398" stroke="#93C5FD" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.45"/>
+    </g>
+  </g>
+</svg>

@@ -8,6 +8,41 @@
 </head>
 <body>
   <div class="desktop-backdrop">
+    <!-- БОКОВАЯ ПАНЕЛЬ ДЛЯ ПК -->
+    <aside class="desktop-sidebar" aria-label="Навигация для компьютера">
+      <div class="sidebar-brand">
+        <img id="sidebar-owl-img" src="/assets/owls/owl-welcome-cap.svg" class="sidebar-owl-img" alt="Астросовье" />
+        <div>
+          <div class="brand-name">Астросовье</div>
+          <span class="sidebar-sub">Профиль студента</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-link active" data-nav="home" type="button">Карта городов</button>
+        <button class="nav-link" data-nav="owl" type="button">Домик совы</button>
+        <button class="nav-link" data-nav="calendar" type="button">Афиша событий</button>
+        <button class="nav-link" data-nav="rating" type="button">Рейтинг и лиги</button>
+        <button class="nav-link" data-nav="profile" type="button">Личный кабинет</button>
+      </nav>
+
+      <div class="card sidebar-user-card">
+        <div class="sidebar-user-top">
+          <strong id="sidebar-nickname">Алая Сова</strong>
+          <span id="sidebar-league" class="pill pill-now">Bronze Owl</span>
+        </div>
+        <div class="sidebar-user-stats">
+          <span>Опыт: <strong id="sidebar-xp">0 XP</strong></span>
+          <span>Совики: <strong id="sidebar-coins">0</strong></span>
+        </div>
+      </div>
+
+      <div class="sidebar-actions">
+        <button id="btn-sidebar-search" class="btn-secondary btn-sm full-width" type="button">Поиск студента</button>
+        <button id="btn-sidebar-verify" class="btn-primary btn-sm full-width" type="button">Ввести код участия</button>
+      </div>
+    </aside>
+
     <div id="app" class="app-shell">
       <!-- ЭКРАН 1: ГЛАВНЫЙ ЭКРАН -->
       <section id="screen-home" class="screen active" aria-label="Главный экран">
@@ -30,9 +65,28 @@
           </div>
         </header>
 
-        <div class="home-hero">
-          <h1>Твой мир больших достижений</h1>
-          <p class="subtitle">Развивайте тематические города за реальные достижения и обустраивайте комнату совы</p>
+        <div class="home-desktop-head">
+          <div class="home-hero">
+            <h1>Твой мир больших достижений</h1>
+            <p class="subtitle">Развивайте тематические города за реальные достижения и обустраивайте комнату совы</p>
+          </div>
+
+          <div class="card home-quick-bar">
+            <div class="quick-stat">
+              <span class="quick-stat-label">Общий опыт</span>
+              <strong id="home-total-xp">0 XP</strong>
+            </div>
+            <div class="quick-stat-divider"></div>
+            <div class="quick-stat">
+              <span class="quick-stat-label">Совики</span>
+              <strong id="home-total-coins">0</strong>
+            </div>
+            <div class="quick-stat-divider"></div>
+            <div class="quick-stat">
+              <span class="quick-stat-label">Лига</span>
+              <strong id="home-league-short">Bronze</strong>
+            </div>
+          </div>
         </div>
 
         <!-- 4 тематических острова -->
@@ -60,23 +114,6 @@
             <span class="island-label">Любознайка</span>
             <span class="pill pill-brand" data-city-lvl="science">Уровень 0</span>
           </button>
-        </div>
-
-        <div class="card home-quick-bar">
-          <div class="quick-stat">
-            <span class="quick-stat-label">Общий опыт</span>
-            <strong id="home-total-xp">0 XP</strong>
-          </div>
-          <div class="quick-stat-divider"></div>
-          <div class="quick-stat">
-            <span class="quick-stat-label">Совики</span>
-            <strong id="home-total-coins">0</strong>
-          </div>
-          <div class="quick-stat-divider"></div>
-          <div class="quick-stat">
-            <span class="quick-stat-label">Лига</span>
-            <strong id="home-league-short">Bronze</strong>
-          </div>
         </div>
 
         <footer class="home-bottom-actions">
@@ -115,35 +152,41 @@
           </button>
         </header>
 
-        <div class="city-stage-wrap">
-          <span id="city-stage-badge" class="pill pill-now">Стадия 1 · Старт</span>
-        </div>
+        <div class="city-desktop-grid">
+          <div class="city-left-col card">
+            <div class="city-stage-wrap">
+              <span id="city-stage-badge" class="pill pill-now">Стадия 1 · Старт</span>
+            </div>
 
-        <div id="city-island-stage" class="city-island-stage"></div>
+            <div id="city-island-stage" class="city-island-stage"></div>
 
-        <div class="city-districts-wrap">
-          <span id="city-districts-pill" class="pill pill-brand">0 из 4 районов открыто</span>
-        </div>
-
-        <div class="card progress-card">
-          <div class="progress-card-head">
-            <h3 class="progress-title">Прогресс города</h3>
-            <span id="city-xp-fraction" class="progress-fraction">0 / 100 XP</span>
+            <div class="city-districts-wrap">
+              <span id="city-districts-pill" class="pill pill-brand">0 из 4 районов открыто</span>
+            </div>
           </div>
-          <div class="progress-track">
-            <div id="city-progress-fill" class="progress-fill" style="width: 0%"></div>
+
+          <div class="city-right-col">
+            <div class="card progress-card">
+              <div class="progress-card-head">
+                <h3 class="progress-title">Прогресс города</h3>
+                <span id="city-xp-fraction" class="progress-fraction">0 / 100 XP</span>
+              </div>
+              <div class="progress-track">
+                <div id="city-progress-fill" class="progress-fill" style="width: 0%"></div>
+              </div>
+              <p id="city-to-next" class="progress-caption">До следующей стадии — 100 XP</p>
+            </div>
+
+            <div class="card milestone-card">
+              <strong id="city-next-title">Далее: Библиотека</strong>
+              <span id="city-next-desc">Новые постройки открываются каждые 100 единиц опыта</span>
+            </div>
+
+            <button id="btn-enter-owl-house" class="btn-primary btn full-width" type="button">
+              Войти в домик совы
+            </button>
           </div>
-          <p id="city-to-next" class="progress-caption">До следующей стадии — 100 XP</p>
         </div>
-
-        <div class="card milestone-card">
-          <strong id="city-next-title">Далее: Библиотека</strong>
-          <span id="city-next-desc">Новые постройки открываются каждые 100 единиц опыта</span>
-        </div>
-
-        <button id="btn-enter-owl-house" class="btn-primary btn full-width" type="button">
-          Войти в домик совы
-        </button>
       </section>
 
       <!-- ЭКРАН 3: ДОМИК СОВЫ С КАСТОМИЗАЦИЕЙ -->
@@ -159,41 +202,47 @@
           </div>
         </header>
 
-        <button id="owl-speech-card" class="card speech-card" type="button">
-          <h3 id="owl-speech-title">Приветствуем в «Астросовье»</h3>
-          <p id="owl-speech-text">Нажмите на сову для подсказки или настройте цвет, свет и интерьер комнаты ниже.</p>
-        </button>
+        <div class="owl-desktop-grid">
+          <div class="card room-stage-card">
+            <div class="owl-room-container">
+              <div id="owl-room-svg" class="owl-room-svg"></div>
+              <img id="owl-room-mascot" class="owl-mascot-layer" src="/assets/owls/owl-cozy-mug.svg" alt="Маскот сова" />
+              <button class="room-hotspot hotspot-wall" data-slot="wallColor" type="button" title="Настроить цвет стен" aria-label="Цвет стен">+</button>
+              <button class="room-hotspot hotspot-lamp" data-slot="lighting" type="button" title="Настроить свет" aria-label="Освещение">+</button>
+              <button class="room-hotspot hotspot-poster" data-slot="poster" type="button" title="Настроить декор стены" aria-label="Декор стены">+</button>
+              <button class="room-hotspot hotspot-chair" data-slot="chair" type="button" title="Настроить кресло" aria-label="Кресло">+</button>
+              <button class="room-hotspot hotspot-plant" data-slot="plant" type="button" title="Настроить растение" aria-label="Растение">+</button>
+              <button class="room-hotspot hotspot-rug" data-slot="rug" type="button" title="Настроить ковёр" aria-label="Ковёр">+</button>
+            </div>
 
-        <div class="card room-stage-card">
-          <div class="owl-room-container">
-            <div id="owl-room-svg" class="owl-room-svg"></div>
-            <button class="room-hotspot hotspot-wall" data-slot="wallColor" type="button" title="Настроить цвет стен" aria-label="Цвет стен">+</button>
-            <button class="room-hotspot hotspot-lamp" data-slot="lighting" type="button" title="Настроить свет" aria-label="Освещение">+</button>
-            <button class="room-hotspot hotspot-chair" data-slot="chair" type="button" title="Настроить кресло" aria-label="Кресло">+</button>
-            <button class="room-hotspot hotspot-plant" data-slot="plant" type="button" title="Настроить растение" aria-label="Растение">+</button>
-            <button class="room-hotspot hotspot-poster" data-slot="poster" type="button" title="Настроить декор стены" aria-label="Декор стены">+</button>
-            <button class="room-hotspot hotspot-rug" data-slot="rug" type="button" title="Настроить ковёр" aria-label="Ковёр">+</button>
+            <div class="room-custom-bar" aria-label="Кастомизация комнаты">
+              <button class="btn-secondary btn-sm" data-slot="owlStyle" type="button">Сова</button>
+              <button class="btn-secondary btn-sm" data-slot="wallColor" type="button">Цвет</button>
+              <button class="btn-secondary btn-sm" data-slot="lighting" type="button">Свет</button>
+              <button class="btn-secondary btn-sm" data-slot="chair" type="button">Кресло</button>
+              <button class="btn-secondary btn-sm" data-slot="plant" type="button">Растение</button>
+              <button class="btn-secondary btn-sm" data-slot="poster" type="button">Декор</button>
+              <button class="btn-secondary btn-sm" data-slot="rug" type="button">Ковёр</button>
+            </div>
           </div>
 
-          <div class="room-custom-bar" aria-label="Кастомизация комнаты">
-            <button class="btn-secondary btn-sm" data-slot="wallColor" type="button">Цвет</button>
-            <button class="btn-secondary btn-sm" data-slot="lighting" type="button">Свет</button>
-            <button class="btn-secondary btn-sm" data-slot="chair" type="button">Кресло</button>
-            <button class="btn-secondary btn-sm" data-slot="plant" type="button">Растение</button>
-            <button class="btn-secondary btn-sm" data-slot="poster" type="button">Декор</button>
-            <button class="btn-secondary btn-sm" data-slot="rug" type="button">Ковёр</button>
-          </div>
-        </div>
+          <div class="owl-side-col">
+            <button id="owl-speech-card" class="card speech-card" type="button">
+              <h3 id="owl-speech-title">Приветствуем в «Астросовье»</h3>
+              <p id="owl-speech-text">Нажмите на карточку для совета или настройте сову, цвет стен, свет и интерьер комнаты.</p>
+            </button>
 
-        <div class="owl-bottom-grid">
-          <button id="btn-open-diary" class="btn-secondary btn action-tile" type="button">
-            <strong>Дневник</strong>
-            <span>Достижения и заявки</span>
-          </button>
-          <button id="btn-open-match3" class="btn-primary btn action-tile" type="button">
-            <strong>Три в ряд</strong>
-            <span id="owl-match3-subtitle">1 игра в день · на совики</span>
-          </button>
+            <div class="owl-bottom-grid">
+              <button id="btn-open-diary" class="btn-secondary btn action-tile" type="button">
+                <strong>Дневник</strong>
+                <span>Достижения и заявки</span>
+              </button>
+              <button id="btn-open-match3" class="btn-primary btn action-tile" type="button">
+                <strong>Три в ряд</strong>
+                <span id="owl-match3-subtitle">1 игра в день · на совики</span>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -209,55 +258,64 @@
           </button>
         </header>
 
-        <div class="card profile-identity">
-          <div id="profile-avatar-circle" class="profile-avatar-lg">АС</div>
-          <h3 id="profile-nickname" class="profile-name">Алая Сова</h3>
-          <p id="profile-id-line" class="profile-id">ID: 123</p>
-        </div>
-
-        <div class="card xp-hero-card">
-          <span class="xp-hero-label">Общий опыт в «Астросовье»</span>
-          <div class="xp-hero-value">
-            <strong id="profile-total-xp">0</strong>
-            <span>XP</span>
-          </div>
-          <div class="xp-hero-track">
-            <div id="profile-xp-fill" class="xp-hero-fill" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <div class="profile-stats-row">
-          <button id="btn-profile-to-rating" class="card stat-mini-card" type="button">
-            <span class="stat-mini-label">Место в рейтинге</span>
-            <div class="stat-mini-bottom">
-              <strong id="profile-rank-global">#1</strong>
-              <span class="arrow-ne">→</span>
+        <div class="profile-desktop-grid">
+          <div class="profile-left-col">
+            <div class="card profile-identity">
+              <div class="profile-avatar-stack">
+                <img id="profile-owl-img" src="/assets/owls/owl-cozy-mug.svg" class="profile-owl-thumb" alt="Сова" />
+                <div id="profile-avatar-circle" class="profile-avatar-lg">АС</div>
+              </div>
+              <h3 id="profile-nickname" class="profile-name">Алая Сова</h3>
+              <p id="profile-id-line" class="profile-id">ID: 123</p>
             </div>
-          </button>
-          <button id="btn-profile-to-league" class="card stat-mini-card" type="button">
-            <span class="stat-mini-label">Место в лиге</span>
-            <div class="stat-mini-bottom">
-              <strong id="profile-rank-league">#1</strong>
-              <span class="arrow-ne">→</span>
+
+            <div class="card league-banner-card">
+              <div id="profile-league-roman" class="league-roman-badge">I</div>
+              <div class="league-banner-info">
+                <strong id="profile-league-name">Бронзовая лига (Bronze Owl)</strong>
+                <span id="profile-league-hint">До следующей лиги — 500 XP</span>
+              </div>
             </div>
-          </button>
-        </div>
 
-        <div class="card league-banner-card">
-          <div id="profile-league-roman" class="league-roman-badge">I</div>
-          <div class="league-banner-info">
-            <strong id="profile-league-name">Бронзовая лига (Bronze Owl)</strong>
-            <span id="profile-league-hint">До следующей лиги — 500 XP</span>
+            <div class="profile-actions-stack">
+              <button id="btn-verify-attendance" class="btn-primary btn full-width" type="button">
+                Подтвердить участие по коду
+              </button>
+              <button id="btn-profile-diary" class="btn-secondary btn full-width" type="button">
+                Открыть дневник достижений
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div class="profile-actions-stack">
-          <button id="btn-verify-attendance" class="btn-primary btn full-width" type="button">
-            Подтвердить участие по коду
-          </button>
-          <button id="btn-profile-diary" class="btn-secondary btn full-width" type="button">
-            Открыть дневник достижений
-          </button>
+          <div class="profile-right-col">
+            <div class="card xp-hero-card">
+              <span class="xp-hero-label">Общий опыт в «Астросовье»</span>
+              <div class="xp-hero-value">
+                <strong id="profile-total-xp">0</strong>
+                <span>XP</span>
+              </div>
+              <div class="xp-hero-track">
+                <div id="profile-xp-fill" class="xp-hero-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="profile-stats-row">
+              <button id="btn-profile-to-rating" class="card stat-mini-card" type="button">
+                <span class="stat-mini-label">Место в рейтинге</span>
+                <div class="stat-mini-bottom">
+                  <strong id="profile-rank-global">#1</strong>
+                  <span class="arrow-ne">→</span>
+                </div>
+              </button>
+              <button id="btn-profile-to-league" class="card stat-mini-card" type="button">
+                <span class="stat-mini-label">Место в лиге</span>
+                <div class="stat-mini-bottom">
+                  <strong id="profile-rank-league">#1</strong>
+                  <span class="arrow-ne">→</span>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 

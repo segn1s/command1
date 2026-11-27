@@ -55,6 +55,20 @@ export const CITIES = {
 };
 
 export const DECOR_SHOP = {
+  owlStyle: {
+    slotShort: 'Сова',
+    slotTitle: 'Образ совы',
+    items: [
+      { id: 'owl-cozy-mug', name: 'Уютная с кружкой', price: 0, swatch: '#2563EB', file: '/assets/owls/owl-cozy-mug.svg' },
+      { id: 'owl-welcome-cap', name: 'Академик с совиком', price: 0, swatch: '#1D4ED8', file: '/assets/owls/owl-welcome-cap.svg' },
+      { id: 'owl-scholar-diary', name: 'Знаток с дневником', price: 12, swatch: '#10B981', file: '/assets/owls/owl-scholar-diary.svg' },
+      { id: 'owl-cuddle-heart', name: 'Душевная сова', price: 14, swatch: '#FB7185', file: '/assets/owls/owl-cuddle-heart.svg' },
+      { id: 'sova-university', name: 'Студент в шапочке', price: 10, swatch: '#5D9BFA', file: '/assets/owls/sova-university.svg' },
+      { id: 'sova-cozy', name: 'Лавандовый шарф', price: 15, swatch: '#B9A5F0', file: '/assets/owls/sova-cozy.svg' },
+      { id: 'sova-science', name: 'Исследователь', price: 18, swatch: '#79C9B5', file: '/assets/owls/sova-science.svg' },
+      { id: 'sova-creative', name: 'Творческая сова', price: 20, swatch: '#F5A28D', file: '/assets/owls/sova-creative.svg' }
+    ]
+  },
   wallColor: {
     slotShort: 'Цвет',
     slotTitle: 'Цвет стен и пола',

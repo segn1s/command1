@@ -232,26 +232,6 @@ export function renderOwlRoomSVG(equipped, decorCatalog, owlMood = 'happy') {
       }
     </g>
 
-    <!-- Маскот-сова -->
-    <g class="owl-character" transform="translate(118, 112)">
-      <ellipse cx="42" cy="56" rx="34" ry="38" fill="#6D4D37"/>
-      <ellipse cx="42" cy="64" rx="22" ry="26" fill="#F4EAD5"/>
-      <polygon points="14,24 22,12 30,24" fill="#573B28"/>
-      <polygon points="54,24 62,12 70,24" fill="#573B28"/>
-      <circle cx="29" cy="40" r="12" fill="#FFFFFF"/>
-      <circle cx="55" cy="40" r="12" fill="#FFFFFF"/>
-      ${
-        owlMood === 'excited'
-          ? `<path d="M22,40 Q29,33 36,40" stroke="#1D1D1D" stroke-width="3" fill="none" stroke-linecap="round"/>
-             <path d="M48,40 Q55,33 62,40" stroke="#1D1D1D" stroke-width="3" fill="none" stroke-linecap="round"/>`
-          : `<circle cx="30" cy="40" r="7" fill="#1D1D1D"/>
-             <circle cx="54" cy="40" r="7" fill="#1D1D1D"/>
-             <circle cx="32" cy="37" r="2.4" fill="#FFFFFF"/>
-             <circle cx="56" cy="37" r="2.4" fill="#FFFFFF"/>`
-      }
-      <polygon points="38,48 46,48 42,56" fill="#C99A2E"/>
-      <ellipse cx="30" cy="94" rx="7" ry="4" fill="#C99A2E"/>
-      <ellipse cx="54" cy="94" rx="7" ry="4" fill="#C99A2E"/>
-    </g>
+    <!-- Маскот-сова отображается поверх комнаты отдельным векторным слоем -->
   </svg>`;
 }

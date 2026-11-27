@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="bgGlow2" cx="50%" cy="52%" r="48%">
+      <stop offset="0%" stop-color="#EDE9FE" stop-opacity="0.85"/>
+      <stop offset="60%" stop-color="#E0F2FE" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="floorShadow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.22"/>
+      <stop offset="70%" stop-color="#1E3A8A" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bodyGrad2" cx="45%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="55%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1E3A8A"/>
+    </radialGradient>
+    <radialGradient id="bellyGrad2" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="68%" stop-color="#F0F9FF"/>
+      <stop offset="100%" stop-color="#BAE6FD"/>
+    </radialGradient>
+    <radialGradient id="faceMask2" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E0F2FE"/>
+    </radialGradient>
+    <radialGradient id="eyeIris2" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="45%" stop-color="#0284C7"/>
+      <stop offset="85%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="beakGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="capTop2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <radialGradient id="coinGrad2" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#FACC15"/>
+      <stop offset="100%" stop-color="#CA8A04"/>
+    </radialGradient>
+    <linearGradient id="wingGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="softDrop2" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1E3A8A" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <circle cx="300" cy="310" r="270" fill="url(#bgGlow2)"/>
+  <g fill="#FBBF24">
+    <path d="M108 185 Q116 185 116 174 Q116 185 126 185 Q116 185 116 196 Q116 185 108 185 Z"/>
+    <path d="M490 155 Q498 155 498 144 Q498 155 508 155 Q498 155 498 166 Q498 155 490 155 Z"/>
+    <path d="M475 270 Q481 270 481 262 Q481 270 488 270 Q481 270 481 278 Q481 270 475 270 Z" fill="#A78BFA"/>
+    <circle cx="135" cy="140" r="4.5" fill="#38BDF8"/>
+    <circle cx="118" cy="255" r="3.5" fill="#F472B6"/>
+  </g>
+  <ellipse cx="300" cy="516" rx="140" ry="24" fill="url(#floorShadow2)"/>
+  <g filter="url(#softDrop2)">
+    <g id="feet2">
+      <ellipse cx="244" cy="505" rx="14" ry="11" fill="url(#beakGrad2)"/>
+      <ellipse cx="262" cy="508" rx="15" ry="12" fill="url(#beakGrad2)"/>
+      <ellipse cx="279" cy="505" rx="13" ry="10" fill="url(#beakGrad2)"/>
+      <ellipse cx="260" cy="503" rx="6" ry="3.5" fill="#FEF9C3" opacity="0.75"/>
+      <ellipse cx="321" cy="505" rx="13" ry="10" fill="url(#beakGrad2)"/>
+      <ellipse cx="338" cy="508" rx="15" ry="12" fill="url(#beakGrad2)"/>
+      <ellipse cx="356" cy="505" rx="14" ry="11" fill="url(#beakGrad2)"/>
+      <ellipse cx="336" cy="503" rx="6" ry="3.5" fill="#FEF9C3" opacity="0.75"/>
+    </g>
+    <path d="M416 276 C458 232, 502 238, 496 274 C490 308, 444 336, 412 332 Z" fill="url(#wingGrad2)"/>
+    <path d="M428 286 C456 260, 480 264, 476 284" stroke="#93C5FD" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.5"/>
+    <path d="M172 245 C164 168, 218 128, 300 128 C382 128, 436 168, 428 245 C452 304, 448 418, 400 470 C362 506, 238 506, 200 470 C152 418, 148 304, 172 245 Z" fill="url(#bodyGrad2)"/>
+    <path d="M188 176 C164 142, 176 116, 202 138 Z" fill="#2563EB"/>
+    <path d="M412 176 C436 142, 424 116, 398 138 Z" fill="#2563EB"/>
+    <path d="M200 318 C200 268, 242 254, 300 254 C358 254, 400 268, 400 318 C412 396, 382 478, 300 484 C218 478, 188 396, 200 318 Z" fill="url(#bellyGrad2)"/>
+    <g fill="#93C5FD" opacity="0.55">
+      <path d="M254 328 Q264 338 274 328 Q264 344 254 328 Z"/>
+      <path d="M290 324 Q300 335 310 324 Q300 341 290 324 Z"/>
+      <path d="M326 328 Q336 338 346 328 Q336 344 326 328 Z"/>
+    </g>
+    <path d="M300 166 C265 145, 195 156, 188 216 C182 264, 234 292, 300 290 C366 292, 418 264, 412 216 C405 156, 335 145, 300 166 Z" fill="url(#faceMask2)"/>
+    <g id="gradCap2" transform="translate(274, 112) rotate(-11)">
+      <path d="M-38 24 C-38 38, 38 38, 38 24 L32 10 L-32 10 Z" fill="#1E293B"/>
+      <polygon points="0,-16 64,6 0,24 -64,6" fill="url(#capTop2)" stroke="#475569" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="0" cy="4" r="4.5" fill="#FBBF24"/>
+      <path d="M0 4 Q32 8 44 24" stroke="#FBBF24" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="44" cy="25" r="3.5" fill="#F59E0B"/>
+      <path d="M41 27 L38 42 L50 42 L47 27 Z" fill="#FBBF24"/>
+    </g>
+    <path d="M224 176 Q246 164 268 174" stroke="#1E3A8A" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M332 174 Q354 164 376 176" stroke="#1E3A8A" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <g id="leftEye2">
+      <circle cx="248" cy="216" r="39" fill="#E0F2FE"/>
+      <circle cx="248" cy="216" r="34" fill="url(#eyeIris2)"/>
+      <circle cx="248" cy="218" r="20" fill="#090D16"/>
+      <path d="M228 232 Q248 246 268 232 Q248 239 228 232 Z" fill="#38BDF8" opacity="0.85"/>
+      <circle cx="236" cy="202" r="10.5" fill="#FFFFFF"/>
+      <circle cx="261" cy="224" r="5" fill="#FFFFFF" opacity="0.9"/>
+      <path d="M227 216 Q230 216 230 212 Q230 216 234 216 Q230 216 230 220 Q230 216 227 216 Z" fill="#FFFFFF"/>
+    </g>
+    <g id="rightEye2">
+      <circle cx="352" cy="216" r="39" fill="#E0F2FE"/>
+      <circle cx="352" cy="216" r="34" fill="url(#eyeIris2)"/>
+      <circle cx="352" cy="218" r="20" fill="#090D16"/>
+      <path d="M332 232 Q352 246 372 232 Q352 239 332 232 Z" fill="#38BDF8" opacity="0.85"/>
+      <circle cx="340" cy="202" r="10.5" fill="#FFFFFF"/>
+      <circle cx="365" cy="224" r="5" fill="#FFFFFF" opacity="0.9"/>
+      <path d="M331 216 Q334 216 334 212 Q334 216 338 216 Q334 216 334 220 Q334 216 331 216 Z" fill="#FFFFFF"/>
+    </g>
+    <ellipse cx="206" cy="248" rx="18" ry="10" fill="#FDA4AF" opacity="0.7"/>
+    <ellipse cx="394" cy="248" rx="18" ry="10" fill="#FDA4AF" opacity="0.7"/>
+    <path d="M286 236 C286 229, 314 229, 314 236 C314 248, 305 258, 300 258 C295 258, 286 248, 286 236 Z" fill="url(#beakGrad2)"/>
+    <path d="M291 241 C295 252, 305 252, 309 241 C303 243, 297 243, 291 241 Z" fill="#E11D48"/>
+    <ellipse cx="297" cy="235" rx="5" ry="2.2" fill="#FEF9C3" opacity="0.85"/>
+    <g id="coin2" transform="translate(215, 368)">
+      <circle cx="0" cy="0" r="36" fill="#B45309"/>
+      <circle cx="-2" cy="-2" r="35" fill="url(#coinGrad2)" stroke="#FEF08A" stroke-width="2"/>
+      <circle cx="-2" cy="-2" r="27" fill="none" stroke="#D97706" stroke-width="2" stroke-dasharray="4 3"/>
+      <path d="M-12 -6 C-12 -15, 8 -15, 8 -6 C10 2, 6 10, -2 10 C-10 10, -14 2, -12 -6 Z" fill="#B45309"/>
+      <circle cx="-6" cy="-5" r="3" fill="#FEF08A"/>
+      <circle cx="2" cy="-5" r="3" fill="#FEF08A"/>
+      <polygon points="-4,-1 0,-1 -2,3" fill="#F59E0B"/>
+      <path d="M-22 -18 Q-10 -28 6 -24" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+    </g>
+    <path d="M164 295 C124 335, 134 405, 186 412 C214 416, 232 396, 224 380 C216 364, 192 364, 182 344 C174 328, 174 312, 164 295 Z" fill="url(#wingGrad2)"/>
+  </g>
+</svg>
