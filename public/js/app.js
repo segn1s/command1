@@ -268,6 +268,10 @@ function navigateTo(screenId) {
   });
   const adminBtn = document.getElementById('btn-sidebar-admin');
   if (adminBtn) adminBtn.classList.toggle('active', screenId === 'admin');
+  const brandProfileBtn = document.getElementById('btn-sidebar-brand-profile');
+  if (brandProfileBtn) brandProfileBtn.classList.toggle('is-active', screenId === 'profile');
+  const userCardBtn = document.getElementById('btn-sidebar-profile');
+  if (userCardBtn) userCardBtn.classList.toggle('is-active', screenId === 'profile');
   renderAll();
 }
 
@@ -373,6 +377,7 @@ function getEquippedOwlFile() {
 function renderSidebar() {
   const totalAP = getTotalAP();
   const league = getLeagueByAP(totalAP);
+  const owlFile = getEquippedOwlFile();
   const nickEl = document.getElementById('sidebar-nickname');
   if (!nickEl) return;
   nickEl.textContent = state.profile.nickname;
@@ -380,13 +385,16 @@ function renderSidebar() {
   document.getElementById('sidebar-coins').textContent = String(getCoinsBalance());
   document.getElementById('sidebar-league').textContent = league.name;
   const sideOwl = document.getElementById('sidebar-owl-img');
-  if (sideOwl) sideOwl.src = getEquippedOwlFile();
+  if (sideOwl) sideOwl.src = owlFile;
+  const userOwl = document.getElementById('sidebar-user-owl-img');
+  if (userOwl) userOwl.src = owlFile;
 }
 
 function renderHome() {
   const totalAP = getTotalAP();
   const league = getLeagueByAP(totalAP);
-  document.getElementById('home-avatar-initials').textContent = getInitials(state.profile.nickname);
+  const homeOwl = document.getElementById('home-avatar-owl');
+  if (homeOwl) homeOwl.src = getEquippedOwlFile();
   document.getElementById('home-total-xp').textContent = `${totalAP} XP`;
   document.getElementById('home-total-coins').textContent = String(getCoinsBalance());
   document.getElementById('home-league-short').textContent = league.name.replace(' Owl', '');
@@ -997,7 +1005,8 @@ function init() {
     btn.addEventListener('click', () => navigateTo(btn.dataset.nav));
   });
 
-  // Кликабельный профиль в боковой панели и на главном экране
+  // Кликабельный профиль (с аватаркой совы) в боковой панели и на главном экране
+  document.getElementById('btn-sidebar-brand-profile').addEventListener('click', () => navigateTo('profile'));
   document.getElementById('btn-sidebar-profile').addEventListener('click', () => navigateTo('profile'));
   document.getElementById('btn-home-quick-profile').addEventListener('click', () => navigateTo('profile'));
   document.getElementById('btn-open-profile').addEventListener('click', () => navigateTo('profile'));

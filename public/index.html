@@ -10,28 +10,30 @@
   <div class="desktop-backdrop">
     <!-- БОКОВАЯ ПАНЕЛЬ ДЛЯ ПК -->
     <aside class="desktop-sidebar" aria-label="Навигация для компьютера">
-      <div class="sidebar-brand">
-        <img id="sidebar-owl-img" src="/assets/owls/owl-welcome-cap.svg" class="sidebar-owl-img" alt="Астросовье" />
-        <div>
+      <button id="btn-sidebar-brand-profile" class="sidebar-brand" type="button" title="Открыть личный кабинет студента" aria-label="Открыть личный кабинет студента">
+        <img id="sidebar-owl-img" src="/assets/owls/owl-welcome-cap.svg" class="sidebar-owl-img" alt="Аватар совы" />
+        <div class="sidebar-brand-text">
           <div class="brand-name">Астросовье</div>
-          <span class="sidebar-sub">Профиль студента</span>
+          <span class="sidebar-sub">Профиль студента →</span>
         </div>
-      </div>
+      </button>
 
       <nav class="sidebar-nav">
         <button class="nav-link active" data-nav="home" type="button">Карта городов</button>
         <button class="nav-link" data-nav="owl" type="button">Домик совы</button>
         <button class="nav-link" data-nav="calendar" type="button">Афиша событий</button>
         <button class="nav-link" data-nav="rating" type="button">Рейтинг и лиги</button>
-        <button class="nav-link" data-nav="profile" type="button">Личный кабинет</button>
         <button id="btn-sidebar-admin" class="nav-link" type="button">Админ-панель</button>
       </nav>
 
       <button id="btn-sidebar-profile" class="card sidebar-user-card" type="button" title="Открыть личный кабинет">
         <div class="sidebar-user-top">
           <div class="sidebar-profile-row">
-            <strong id="sidebar-nickname">Алая Сова</strong>
-            <span class="sidebar-profile-arrow">Профиль →</span>
+            <div class="sidebar-profile-identity">
+              <img id="sidebar-user-owl-img" src="/assets/owls/owl-cozy-mug.svg" class="sidebar-user-owl" alt="Сова профиля" />
+              <strong id="sidebar-nickname">Алая Сова</strong>
+            </div>
+            <span class="sidebar-profile-arrow">Кабинет →</span>
           </div>
           <span id="sidebar-league" class="pill pill-now">Bronze Owl</span>
         </div>
@@ -63,8 +65,8 @@
               </svg>
               <span>Поиск</span>
             </button>
-            <button id="btn-open-profile" class="avatar-btn" type="button" aria-label="Личный кабинет">
-              <span id="home-avatar-initials">АС</span>
+            <button id="btn-open-profile" class="avatar-btn" type="button" title="Личный кабинет студента" aria-label="Личный кабинет">
+              <img id="home-avatar-owl" class="avatar-owl-img" src="/assets/owls/owl-cozy-mug.svg" alt="Профиль" />
             </button>
           </div>
         </header>

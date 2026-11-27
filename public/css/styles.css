@@ -271,8 +271,9 @@ h3 {
 }
 
 .avatar-btn {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
+  padding: 3px;
   border-radius: 50%;
   border: 1px solid rgb(var(--brand-rgb) / 0.25);
   background: var(--brand-50);
@@ -284,6 +285,19 @@ h3 {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.avatar-btn:hover {
+  border-color: var(--brand);
+  transform: translateY(-1px);
+}
+
+.avatar-owl-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .avatar-btn:focus-visible,
@@ -1885,7 +1899,27 @@ select:focus-visible {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 4px 6px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: var(--radius-control);
+    border: 1px solid transparent;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .sidebar-brand:hover,
+  .sidebar-brand.is-active {
+    background: rgb(var(--white-rgb) / 0.85);
+    border-color: rgb(var(--brand-rgb) / 0.25);
+  }
+
+  .sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
   }
 
   .sidebar-owl-img {
@@ -1897,7 +1931,8 @@ select:focus-visible {
 
   .sidebar-sub {
     font-size: 12px;
-    color: var(--text-muted);
+    font-weight: 600;
+    color: var(--brand);
   }
 
   .sidebar-nav {
@@ -1954,7 +1989,8 @@ select:focus-visible {
     transition: border-color 0.15s ease, background 0.15s ease;
   }
 
-  .sidebar-user-card:hover {
+  .sidebar-user-card:hover,
+  .sidebar-user-card.is-active {
     background: var(--white);
     border-color: var(--brand);
   }
@@ -1973,6 +2009,23 @@ select:focus-visible {
     justify-content: space-between;
     width: 100%;
     gap: 6px;
+  }
+
+  .sidebar-profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .sidebar-user-owl {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--brand-50);
+    padding: 2px;
   }
 
   .sidebar-profile-arrow {
