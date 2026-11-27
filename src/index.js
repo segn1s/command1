@@ -1,10 +1,21 @@
 /**
  * Cloudflare Worker entrypoint for "Астросовье".
- * Handles 30-second rotating 6-digit verification codes and serves static assets from ./public.
+ * - Protects organizer code retrieval behind admin password authentication.
+ * - Verifies 30-second rotating 6-digit attendance codes.
+ * - Serves static assets from ./public.
  */
 
 const CODE_PERIOD_SECONDS = 30;
 const CODE_SECRET = 'astrosovye-campus-secret-2026';
+const DEFAULT_ADMIN_PASSWORD = 'astro-admin-2026';
+
+async function sha256Hex(input) {
+  const data = new TextEncoder().encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
 
 async function generateTotpCode(windowIndex) {
   const data = new TextEncoder().encode(`${CODE_SECRET}:${windowIndex}`);
@@ -12,6 +23,19 @@ async function generateTotpCode(windowIndex) {
   const bytes = new Uint8Array(hashBuffer);
   const num = ((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]) >>> 0;
   return String(num % 1000000).padStart(6, '0');
+}
+
+async function createAdminToken(password) {
+  return sha256Hex(`${CODE_SECRET}:admin-session:${password}`);
+}
+
+async function isAuthorizedAdmin(request, env) {
+  const auth = request.headers.get('Authorization') || '';
+  if (!auth.startsWith('Bearer ')) return false;
+  const token = auth.slice(7).trim();
+  const expectedPassword = env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
+  const expectedToken = await createAdminToken(expectedPassword);
+  return token.length > 0 && token === expectedToken;
 }
 
 function jsonResponse(payload, status = 200) {
@@ -32,7 +56,27 @@ export default {
       return jsonResponse({ ok: true, service: 'astrosovye' });
     }
 
-    if (url.pathname === '/api/code/current' && request.method === 'GET') {
+    if (url.pathname === '/api/admin/login' && request.method === 'POST') {
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ ok: false, error: 'Некорректный формат запроса' }, 400);
+      }
+      const password = String(body?.password || '');
+      const expected = env.ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
+      if (password !== expected) {
+        return jsonResponse({ ok: false, error: 'Неверный пароль администратора' }, 401);
+      }
+      const token = await createAdminToken(expected);
+      return jsonResponse({ ok: true, token });
+    }
+
+    if (url.pathname === '/api/admin/code' && request.method === 'GET') {
+      const allowed = await isAuthorizedAdmin(request, env);
+      if (!allowed) {
+        return jsonResponse({ error: 'Требуется авторизация администратора' }, 401);
+      }
       const nowSec = Math.floor(Date.now() / 1000);
       const windowIndex = Math.floor(nowSec / CODE_PERIOD_SECONDS);
       const secondsRemaining = CODE_PERIOD_SECONDS - (nowSec % CODE_PERIOD_SECONDS);

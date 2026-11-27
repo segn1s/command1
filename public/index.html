@@ -24,18 +24,22 @@
         <button class="nav-link" data-nav="calendar" type="button">Афиша событий</button>
         <button class="nav-link" data-nav="rating" type="button">Рейтинг и лиги</button>
         <button class="nav-link" data-nav="profile" type="button">Личный кабинет</button>
+        <button id="btn-sidebar-admin" class="nav-link" type="button">Админ-панель</button>
       </nav>
 
-      <div class="card sidebar-user-card">
+      <button id="btn-sidebar-profile" class="card sidebar-user-card" type="button" title="Открыть личный кабинет">
         <div class="sidebar-user-top">
-          <strong id="sidebar-nickname">Алая Сова</strong>
+          <div class="sidebar-profile-row">
+            <strong id="sidebar-nickname">Алая Сова</strong>
+            <span class="sidebar-profile-arrow">Профиль →</span>
+          </div>
           <span id="sidebar-league" class="pill pill-now">Bronze Owl</span>
         </div>
         <div class="sidebar-user-stats">
           <span>Опыт: <strong id="sidebar-xp">0 XP</strong></span>
           <span>Совики: <strong id="sidebar-coins">0</strong></span>
         </div>
-      </div>
+      </button>
 
       <div class="sidebar-actions">
         <button id="btn-sidebar-search" class="btn-secondary btn-sm full-width" type="button">Поиск студента</button>
@@ -71,7 +75,7 @@
             <p class="subtitle">Развивайте тематические города за реальные достижения и обустраивайте комнату совы</p>
           </div>
 
-          <div class="card home-quick-bar">
+          <button id="btn-home-quick-profile" class="card home-quick-bar" type="button" title="Открыть личный кабинет">
             <div class="quick-stat">
               <span class="quick-stat-label">Общий опыт</span>
               <strong id="home-total-xp">0 XP</strong>
@@ -86,7 +90,7 @@
               <span class="quick-stat-label">Лига</span>
               <strong id="home-league-short">Bronze</strong>
             </div>
-          </div>
+          </button>
         </div>
 
         <!-- 4 тематических острова -->
@@ -284,6 +288,9 @@
               <button id="btn-profile-diary" class="btn-secondary btn full-width" type="button">
                 Открыть дневник достижений
               </button>
+              <button id="btn-open-admin" class="btn-secondary btn full-width" type="button">
+                Раздел администратора
+              </button>
             </div>
           </div>
 
@@ -329,24 +336,35 @@
           <div class="spacer-60"></div>
         </header>
 
-        <h1 class="section-big-title">События кампуса</h1>
+        <h1 class="section-big-title">События и расписание</h1>
 
-        <div class="calendar-month-row">
-          <strong id="calendar-month-label">Ноябрь 2026</strong>
-          <span class="pill pill-now">Текущая неделя</span>
+        <div class="segmented">
+          <button id="cal-tab-events" class="active" type="button">Мероприятия</button>
+          <button id="cal-tab-schedule" type="button">Расписание занятий</button>
         </div>
 
-        <div id="calendar-week-strip" class="week-strip"></div>
+        <div id="calendar-events-pane" class="cal-pane active">
+          <div class="calendar-month-row">
+            <strong id="calendar-month-label">Ноябрь 2026</strong>
+            <span class="pill pill-now">Текущая неделя</span>
+          </div>
 
-        <div class="filter-chips" id="calendar-filters">
-          <button class="btn-secondary btn-sm active" data-cat="all" type="button">Все</button>
-          <button class="btn-secondary btn-sm" data-cat="sport" type="button">Качалово</button>
-          <button class="btn-secondary btn-sm" data-cat="science" type="button">Любознайка</button>
-          <button class="btn-secondary btn-sm" data-cat="creativity" type="button">Фантазерск</button>
-          <button class="btn-secondary btn-sm" data-cat="social" type="button">Движняково</button>
+          <div id="calendar-week-strip" class="week-strip"></div>
+
+          <div class="filter-chips" id="calendar-filters">
+            <button class="btn-secondary btn-sm active" data-cat="all" type="button">Все</button>
+            <button class="btn-secondary btn-sm cat-chip-sport" data-cat="sport" type="button">Качалово</button>
+            <button class="btn-secondary btn-sm cat-chip-science" data-cat="science" type="button">Любознайка</button>
+            <button class="btn-secondary btn-sm cat-chip-creativity" data-cat="creativity" type="button">Фантазерск</button>
+            <button class="btn-secondary btn-sm cat-chip-social" data-cat="social" type="button">Движняково</button>
+          </div>
+
+          <div id="calendar-events-list" class="events-list"></div>
         </div>
 
-        <div id="calendar-events-list" class="events-list"></div>
+        <div id="calendar-schedule-pane" class="cal-pane">
+          <div id="calendar-schedule-list" class="events-list"></div>
+        </div>
       </section>
 
       <!-- ЭКРАН 6: РЕЙТИНГ И ЛИГИ -->
@@ -378,6 +396,179 @@
         <div id="rating-promo-banner" class="card milestone-card">
           <strong id="rating-promo-title">Повышение лиги</strong>
           <span id="rating-promo-desc">До следующей лиги осталось 150 XP</span>
+        </div>
+      </section>
+
+      <!-- ЭКРАН 7: ПАНЕЛЬ АДМИНИСТРАТОРА -->
+      <section id="screen-admin" class="screen" aria-label="Панель администратора">
+        <header class="sub-topbar glass-header">
+          <button class="btn-secondary btn-sm" data-back="home" type="button" aria-label="Назад">
+            ← Назад
+          </button>
+          <h2 class="topbar-title">Админ-панель</h2>
+          <button id="btn-admin-logout" class="btn-secondary btn-sm" type="button">Выйти</button>
+        </header>
+
+        <div class="card organizer-demo-box">
+          <div class="organizer-demo-row">
+            <span>Актуальный 6-значный код для отметки посещения:</span>
+            <strong id="admin-live-code" class="live-code-digits">------</strong>
+          </div>
+          <div class="code-timer-bar">
+            <div id="admin-code-timer-fill" class="code-timer-fill"></div>
+          </div>
+          <span id="admin-code-timer" class="code-timer-text">Обновление через 30 с</span>
+        </div>
+
+        <div class="segmented admin-segmented">
+          <button class="active" data-admin-tab="events" type="button">Мероприятия</button>
+          <button data-admin-tab="schedule" type="button">Расписание</button>
+          <button data-admin-tab="reviews" type="button">Заявки (<span id="admin-pending-count">0</span>)</button>
+        </div>
+
+        <!-- АДМИН ВКЛАДКА 1: МЕРОПРИЯТИЯ И ПРАЗДНИКИ -->
+        <div id="admin-tab-events" class="admin-tab-pane active">
+          <div class="card admin-form-card">
+            <h3>Добавить мероприятие или праздник</h3>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-title">Название</label>
+                <input id="adm-ev-title" class="form-input" type="text" placeholder="Например: День Здоровья" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-kind">Тип события</label>
+                <select id="adm-ev-kind" class="form-input">
+                  <option value="Мероприятие">Мероприятие</option>
+                  <option value="Праздник">Праздник</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-cat">Направление</label>
+                <select id="adm-ev-cat" class="form-input">
+                  <option value="sport">Качалово (зелёный)</option>
+                  <option value="science">Любознайка (фиолетовый)</option>
+                  <option value="creativity">Фантазерск (розовый)</option>
+                  <option value="social">Движняково (ярко-жёлтый)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-place">Площадка</label>
+                <input id="adm-ev-place" class="form-input" type="text" placeholder="Например: Стадион кампуса" />
+              </div>
+            </div>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-date">Дата</label>
+                <input id="adm-ev-date" class="form-input" type="text" placeholder="27 ноя" value="27 ноя" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-time">Время</label>
+                <input id="adm-ev-time" class="form-input" type="text" placeholder="12:00" value="12:00" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-day">День полосы (0–6)</label>
+                <select id="adm-ev-day" class="form-input">
+                  <option value="0">Сегодня (Пт 27)</option>
+                  <option value="1">Сб 28</option>
+                  <option value="2">Вс 29</option>
+                  <option value="3">Пн 30</option>
+                  <option value="4">Вт 1</option>
+                  <option value="5">Ср 2</option>
+                  <option value="6">Чт 3</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-level">Уровень (L)</label>
+                <select id="adm-ev-level" class="form-input">
+                  <option value="0.25">0.25 · Вуз</option>
+                  <option value="0.50">0.50 · Город</option>
+                  <option value="0.75">0.75 · Регион</option>
+                  <option value="1.00">1.00 · Всеросс.</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-activity">Активность (A)</label>
+                <select id="adm-ev-activity" class="form-input">
+                  <option value="1">1 · Участие</option>
+                  <option value="2">2 · Вклад</option>
+                  <option value="3">3 · Организатор</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-ev-result">Результат (R)</label>
+                <select id="adm-ev-result" class="form-input">
+                  <option value="0">0 · Без места</option>
+                  <option value="1">1 · Финалист</option>
+                  <option value="2">2 · 3 место</option>
+                  <option value="2.5">2.5 · 2 место</option>
+                  <option value="3">3 · 1 место</option>
+                </select>
+              </div>
+            </div>
+            <button id="btn-admin-add-event" class="btn-primary btn full-width" type="button">Опубликовать в афишу</button>
+          </div>
+          <div id="admin-events-list" class="events-list"></div>
+        </div>
+
+        <!-- АДМИН ВКЛАДКА 2: РАСПИСАНИЕ ЗАНЯТИЙ -->
+        <div id="admin-tab-schedule" class="admin-tab-pane">
+          <div class="card admin-form-card">
+            <h3>Добавить занятие в расписание</h3>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="adm-sch-title">Занятие / секция</label>
+                <input id="adm-sch-title" class="form-input" type="text" placeholder="Например: Клуб робототехники" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-sch-cat">Направление</label>
+                <select id="adm-sch-cat" class="form-input">
+                  <option value="sport">Качалово (зелёный)</option>
+                  <option value="science">Любознайка (фиолетовый)</option>
+                  <option value="creativity">Фантазерск (розовый)</option>
+                  <option value="social">Движняково (ярко-жёлтый)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="adm-sch-day">День недели</label>
+                <select id="adm-sch-day" class="form-input">
+                  <option value="Пн">Понедельник (Пн)</option>
+                  <option value="Вт">Вторник (Вт)</option>
+                  <option value="Ср">Среда (Ср)</option>
+                  <option value="Чт">Четверг (Чт)</option>
+                  <option value="Пт">Пятница (Пт)</option>
+                  <option value="Сб">Суббота (Сб)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-sch-time">Время</label>
+                <input id="adm-sch-time" class="form-input" type="text" placeholder="16:00–17:30" value="16:00–17:30" />
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="adm-sch-place">Аудитория / площадка</label>
+                <input id="adm-sch-place" class="form-input" type="text" placeholder="Корпус А, ауд. 204" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="adm-sch-mentor">Преподаватель / куратор</label>
+                <input id="adm-sch-mentor" class="form-input" type="text" placeholder="И. И. Петров" />
+              </div>
+            </div>
+            <button id="btn-admin-add-schedule" class="btn-primary btn full-width" type="button">Добавить в расписание</button>
+          </div>
+          <div id="admin-schedule-list" class="events-list"></div>
+        </div>
+
+        <!-- АДМИН ВКЛАДКА 3: ПРОВЕРКА ЗАЯВОК И НАЗНАЧЕНИЕ ОПЫТА -->
+        <div id="admin-tab-reviews" class="admin-tab-pane">
+          <p class="modal-desc">Назначьте реальные параметры уровня (L), активности (A) и результата (R) перед подтверждением — студент не может выставить их сам.</p>
+          <div id="admin-reviews-list" class="diary-list"></div>
         </div>
       </section>
     </div>
@@ -440,51 +631,27 @@
 
       <!-- ВКЛАДКА 2: ПОДАЧА ЗАЯВКИ -->
       <div id="diary-tab-create" class="diary-tab-pane">
+        <div id="app-weekly-limit-info" class="formula-preview-box">
+          Заявок на этой неделе: 0 из 5
+        </div>
         <div class="form-group">
           <label class="form-label" for="app-title">Название мероприятия</label>
-          <input id="app-title" class="form-input" type="text" placeholder="Например: Научная конференция АГУ" />
+          <input id="app-title" class="form-input" type="text" placeholder="Например: День Здоровья" />
         </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label class="form-label" for="app-category">Направление</label>
-            <select id="app-category" class="form-input">
-              <option value="science">Любознайка</option>
-              <option value="sport">Качалово</option>
-              <option value="creativity">Фантазерск</option>
-              <option value="social">Движняково</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="app-level">Уровень (L)</label>
-            <select id="app-level" class="form-input">
-              <option value="0.25">Внутривузовский (0.25)</option>
-              <option value="0.50">Городской (0.50)</option>
-              <option value="0.75">Региональный (0.75)</option>
-              <option value="1.00">Всероссийский (1.00)</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="app-category">Направление</label>
+          <select id="app-category" class="form-input">
+            <option value="science">Любознайка</option>
+            <option value="sport">Качалово</option>
+            <option value="creativity">Фантазерск</option>
+            <option value="social">Движняково</option>
+          </select>
         </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label class="form-label" for="app-activity">Активность (A)</label>
-            <select id="app-activity" class="form-input">
-              <option value="1">Участие (1)</option>
-              <option value="2">Значительный вклад (2)</option>
-              <option value="3">Организация / спикерство (3)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="app-result">Результат (R)</label>
-            <select id="app-result" class="form-input">
-              <option value="0">Без призового места (0)</option>
-              <option value="1">Финалист (1)</option>
-              <option value="2">3 место (2)</option>
-              <option value="2.5">2 место (2.5)</option>
-              <option value="3">1 место (3)</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="app-note">Описание участия</label>
+          <input id="app-note" class="form-input" type="text" placeholder="Например: участие в забеге или выступление с докладом" maxlength="120" />
         </div>
-        <div id="app-formula-preview" class="formula-preview-box"></div>
+        <p class="modal-desc">Количество опыта (XP) и совиков определяет администратор после проверки вашей заявки.</p>
         <p id="app-form-error" class="form-error hidden"></p>
 
         <button id="btn-submit-application" class="btn-primary btn full-width" type="button">Отправить заявку</button>
@@ -512,18 +679,26 @@
         <p id="verify-code-error" class="form-error hidden"></p>
       </div>
 
-      <div class="organizer-demo-box">
-        <div class="organizer-demo-row">
-          <span>Текущий код организатора (демо):</span>
-          <strong id="organizer-live-code" class="live-code-digits">------</strong>
-        </div>
-        <div class="code-timer-bar">
-          <div id="code-timer-fill" class="code-timer-fill"></div>
-        </div>
-        <span id="organizer-code-timer" class="code-timer-text">Обновление через 30 с</span>
-      </div>
+      <p class="modal-desc">6-значный код выдаёт организатор или администратор на мероприятии. Код обновляется каждые 30 секунд.</p>
 
       <button id="btn-confirm-code" class="btn-primary btn full-width" type="button">Подтвердить</button>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА: ВХОД ДЛЯ АДМИНИСТРАТОРА -->
+  <div id="modal-admin-login" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3 id="admin-login-title">Вход в панель администратора</h3>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-admin-login" type="button" aria-label="Закрыть">✕</button>
+      </div>
+      <p class="modal-desc">Введите пароль администратора для управления мероприятиями, расписанием занятий и проверки заявок.</p>
+      <div class="form-group">
+        <label class="form-label" for="admin-password-input">Пароль администратора</label>
+        <input id="admin-password-input" class="form-input" type="password" placeholder="Введите пароль" />
+        <p id="admin-login-error" class="form-error hidden"></p>
+      </div>
+      <button id="btn-admin-login-submit" class="btn-primary btn full-width" type="button">Войти</button>
     </div>
   </div>
 

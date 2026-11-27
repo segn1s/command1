@@ -11,6 +11,7 @@ import {
   CITIES,
   DECOR_SHOP,
   CALENDAR_EVENTS,
+  DEFAULT_SCHEDULE,
   MOCK_PEERS
 } from './data.js';
 import {
@@ -20,11 +21,23 @@ import {
 } from './illustrations.js';
 import { Match3Game } from './match3.js';
 
-const STORAGE_KEY = 'astrosovye_state_v2';
+const STORAGE_KEY = 'astrosovye_state_v3';
 const CODE_SECRET = 'astrosovye-campus-secret-2026';
 const CODE_PERIOD_SECONDS = 30;
+const MAX_WEEKLY_APPLICATIONS = 5;
+const ADMIN_FALLBACK_HASH = 'f0d35fad43ec872bef926dc42f529cad3e29bd23c130e60fe8100633066200f0';
+
+function getISOWeekKey(date = new Date()) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+}
 
 function createInitialState() {
+  const currWeek = getISOWeekKey();
   const seedAchievements = [
     {
       id: 'ach-1',
@@ -37,6 +50,9 @@ function createInitialState() {
       status: 'approved',
       AP: 70,
       DP: 7,
+      source: 'code',
+      studentId: '123',
+      weekKey: currWeek,
       createdAt: '18.11.2026'
     },
     {
@@ -50,6 +66,9 @@ function createInitialState() {
       status: 'approved',
       AP: 60,
       DP: 6,
+      source: 'code',
+      studentId: '123',
+      weekKey: currWeek,
       createdAt: '20.11.2026'
     },
     {
@@ -63,6 +82,9 @@ function createInitialState() {
       status: 'approved',
       AP: 60,
       DP: 6,
+      source: 'code',
+      studentId: '123',
+      weekKey: currWeek,
       createdAt: '22.11.2026'
     },
     {
@@ -76,19 +98,26 @@ function createInitialState() {
       status: 'approved',
       AP: 72,
       DP: 7,
+      source: 'code',
+      studentId: '123',
+      weekKey: currWeek,
       createdAt: '24.11.2026'
     },
     {
       id: 'ach-5',
       title: 'Доклад на научной конференции',
       category: 'science',
-      L: 0.75,
-      A: 2,
-      R: 3,
+      L: 0.25,
+      A: 1,
+      R: 0,
       V: 0,
       status: 'pending',
-      AP: 84,
-      DP: 8,
+      AP: 0,
+      DP: 0,
+      note: 'Выступление с докладом на секции ИТ',
+      source: 'application',
+      studentId: '123',
+      weekKey: currWeek,
       createdAt: '26.11.2026'
     }
   ];
@@ -122,6 +151,8 @@ function createInitialState() {
       poster: 'poster-star',
       rug: 'rug-brand'
     },
+    events: CALENDAR_EVENTS.map((e) => ({ ...e })),
+    schedule: DEFAULT_SCHEDULE.map((s) => ({ ...s })),
     achievements: seedAchievements
   };
 }
@@ -136,7 +167,9 @@ function loadState() {
       ...base,
       ...parsed,
       equippedDecor: { ...base.equippedDecor, ...(parsed.equippedDecor || {}) },
-      ownedDecor: Array.from(new Set([...base.ownedDecor, ...(parsed.ownedDecor || [])]))
+      ownedDecor: Array.from(new Set([...base.ownedDecor, ...(parsed.ownedDecor || [])])),
+      events: Array.isArray(parsed.events) && parsed.events.length ? parsed.events : base.events,
+      schedule: Array.isArray(parsed.schedule) && parsed.schedule.length ? parsed.schedule : base.schedule
     };
   } catch {
     return createInitialState();
@@ -150,8 +183,10 @@ let owlMood = 'happy';
 let ratingTab = 'league';
 let calendarSelectedDay = 0;
 let calendarCategory = 'all';
+let calendarTab = 'events';
 let currentShopSlot = 'wallColor';
-let codeTimerHandle = null;
+let adminToken = null;
+let adminCodeTimerHandle = null;
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -185,6 +220,16 @@ function hasPlayedMatch3Today() {
   return state.lastMatch3PlayedDate === getTodayKey();
 }
 
+function getWeeklySubmissionsCount(studentId) {
+  const currWeek = getISOWeekKey();
+  return state.achievements.filter(
+    (a) =>
+      a.source === 'application' &&
+      String(a.studentId) === String(studentId) &&
+      a.weekKey === currWeek
+  ).length;
+}
+
 function showToast(msg, variant = 'info') {
   const el = document.getElementById('toast');
   const textEl = document.getElementById('toast-text');
@@ -197,8 +242,22 @@ function showToast(msg, variant = 'info') {
   showToast._t = setTimeout(() => el.classList.add('hidden'), 3000);
 }
 
+function stopAdminCodeTimer() {
+  if (adminCodeTimerHandle) {
+    clearInterval(adminCodeTimerHandle);
+    adminCodeTimerHandle = null;
+  }
+}
+
 function navigateTo(screenId) {
+  if (screenId === 'admin' && !adminToken) {
+    openAdminLoginModal();
+    return;
+  }
   activeScreen = screenId;
+  if (screenId !== 'admin') {
+    stopAdminCodeTimer();
+  }
   document.querySelectorAll('.screen').forEach((s) => s.classList.remove('active'));
   const target = document.getElementById(`screen-${screenId}`);
   if (target) target.classList.add('active');
@@ -207,6 +266,8 @@ function navigateTo(screenId) {
       btn.dataset.nav === screenId || (screenId === 'city' && btn.dataset.nav === 'home');
     btn.classList.toggle('active', matches);
   });
+  const adminBtn = document.getElementById('btn-sidebar-admin');
+  if (adminBtn) adminBtn.classList.toggle('active', screenId === 'admin');
   renderAll();
 }
 
@@ -219,13 +280,17 @@ function closeModal(id) {
     window.__claimMatch3OnClose();
   }
   document.getElementById(id).classList.add('hidden');
-  if (id === 'modal-verify-code' && codeTimerHandle) {
-    clearInterval(codeTimerHandle);
-    codeTimerHandle = null;
-  }
 }
 
-/* ---------- 6-значные коды каждые 30 секунд ---------- */
+/* ---------- Криптография, коды и вход администратора ---------- */
+async function sha256Hex(text) {
+  const data = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 async function localGenerateTotp(windowIndex) {
   const data = new TextEncoder().encode(`${CODE_SECRET}:${windowIndex}`);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -234,10 +299,14 @@ async function localGenerateTotp(windowIndex) {
   return String(num % 1000000).padStart(6, '0');
 }
 
-async function fetchCurrentCodeInfo() {
+async function fetchAdminCodeInfo() {
+  if (!adminToken) return null;
   try {
-    const res = await fetch('/api/code/current');
+    const res = await fetch('/api/admin/code', {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
     if (res.ok) return await res.json();
+    if (res.status === 401) return null;
   } catch {
     // локальный расчёт без Worker
   }
@@ -271,7 +340,31 @@ async function verifySubmittedCode(submitted) {
   return submitted === c1 || submitted === c2;
 }
 
-/* ---------- Отрисовка экранов ---------- */
+async function authenticateAdmin(password) {
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.token || null;
+    }
+    if (res.status === 401) {
+      return null;
+    }
+  } catch {
+    // локальный статический сервер без Worker
+  }
+  const hash = await sha256Hex(password);
+  if (hash === ADMIN_FALLBACK_HASH) {
+    return await sha256Hex(`${CODE_SECRET}:admin-session:${password}`);
+  }
+  return null;
+}
+
+/* ---------- Отрисовка основных экранов ---------- */
 function getEquippedOwlFile() {
   const item = DECOR_SHOP.owlStyle.items.find((i) => i.id === state.equippedDecor.owlStyle);
   return item?.file || '/assets/owls/owl-cozy-mug.svg';
@@ -435,9 +528,9 @@ function renderCalendar() {
     strip.appendChild(btn);
   });
 
-  const filtered = CALENDAR_EVENTS.filter((ev) => {
+  const filtered = state.events.filter((ev) => {
     const catOk = calendarCategory === 'all' || ev.category === calendarCategory;
-    const dayOk = calendarSelectedDay === 0 || ev.dayOffset === calendarSelectedDay;
+    const dayOk = calendarSelectedDay === 0 || Number(ev.dayOffset) === calendarSelectedDay;
     return catOk && dayOk;
   });
 
@@ -445,29 +538,55 @@ function renderCalendar() {
   list.innerHTML = '';
   if (filtered.length === 0) {
     list.innerHTML = '<div class="card"><p class="modal-desc">На выбранный день событий по фильтру нет. Выберите вкладку «Все» или другой день.</p></div>';
-    return;
+  } else {
+    filtered.forEach((ev) => {
+      const catLabel = CITIES[ev.category]?.shortName || ev.categoryLabel;
+      const card = document.createElement('div');
+      card.className = 'card event-card';
+      card.innerHTML = `
+        <div class="event-time-box cat-${ev.category}">
+          <strong>${ev.time}</strong>
+          <span>${ev.dateLabel}</span>
+        </div>
+        <div class="event-info">
+          <div class="event-top-row">
+            <span class="event-cat-pill cat-${ev.category}">${catLabel}${ev.kind === 'Праздник' ? ' · Праздник' : ''}</span>
+            <span class="event-xp-tag">+${ev.xpPreview} XP</span>
+          </div>
+          <div class="event-title">${ev.title}</div>
+          <div class="event-loc">${ev.location}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => openVerifyModal(ev.id));
+      list.appendChild(card);
+    });
   }
 
-  filtered.forEach((ev) => {
-    const card = document.createElement('div');
-    card.className = 'card event-card';
-    card.innerHTML = `
-      <div class="event-time-box">
-        <strong>${ev.time}</strong>
-        <span>${ev.dateLabel}</span>
-      </div>
-      <div class="event-info">
-        <div class="event-top-row">
-          <span>${ev.categoryLabel}</span>
-          <span class="event-xp-tag">+${ev.xpPreview} XP</span>
+  const schList = document.getElementById('calendar-schedule-list');
+  schList.innerHTML = '';
+  if (state.schedule.length === 0) {
+    schList.innerHTML = '<div class="card"><p class="modal-desc">Расписание занятий пока пустое. Администратор может добавить занятия в админ-панели.</p></div>';
+  } else {
+    state.schedule.forEach((item) => {
+      const catLabel = CITIES[item.category]?.shortName || item.category;
+      const card = document.createElement('div');
+      card.className = 'card event-card';
+      card.innerHTML = `
+        <div class="event-time-box cat-${item.category}">
+          <strong>${item.day}</strong>
+          <span>${item.time}</span>
         </div>
-        <div class="event-title">${ev.title}</div>
-        <div class="event-loc">${ev.location}</div>
-      </div>
-    `;
-    card.addEventListener('click', () => openVerifyModal(ev.id));
-    list.appendChild(card);
-  });
+        <div class="event-info">
+          <div class="event-top-row">
+            <span class="event-cat-pill cat-${item.category}">${catLabel}</span>
+          </div>
+          <div class="event-title">${item.title}</div>
+          <div class="event-loc">${item.place} · ${item.mentor}</div>
+        </div>
+      `;
+      schList.appendChild(card);
+    });
+  }
 }
 
 function renderRating() {
@@ -533,6 +652,161 @@ function renderRating() {
     : 'Максимальный множитель совиков K = 1.20 активен';
 }
 
+/* ---------- Панель администратора ---------- */
+async function refreshAdminCodeBox() {
+  if (activeScreen !== 'admin' || !adminToken) return;
+  const info = await fetchAdminCodeInfo();
+  if (!info) return;
+  document.getElementById('admin-live-code').textContent = info.code;
+  document.getElementById('admin-code-timer').textContent =
+    `Обновление через ${info.secondsRemaining} с`;
+  document.getElementById('admin-code-timer-fill').style.width =
+    `${Math.round((info.secondsRemaining / info.periodSeconds) * 100)}%`;
+}
+
+function renderAdmin() {
+  const pending = state.achievements.filter((a) => a.status === 'pending');
+  document.getElementById('admin-pending-count').textContent = String(pending.length);
+
+  // 1. Список мероприятий и праздников
+  const evList = document.getElementById('admin-events-list');
+  evList.innerHTML = '';
+  state.events.forEach((ev) => {
+    const catName = CITIES[ev.category]?.shortName || ev.category;
+    const card = document.createElement('div');
+    card.className = 'card event-card';
+    card.innerHTML = `
+      <div class="event-time-box cat-${ev.category}">
+        <strong>${ev.time}</strong>
+        <span>${ev.dateLabel}</span>
+      </div>
+      <div class="event-info">
+        <div class="event-top-row">
+          <span class="event-cat-pill cat-${ev.category}">${catName}${ev.kind === 'Праздник' ? ' · Праздник' : ''}</span>
+          <span class="event-xp-tag">+${ev.xpPreview} XP (L=${ev.L}, A=${ev.A}, R=${ev.R})</span>
+        </div>
+        <div class="event-title">${ev.title}</div>
+        <div class="event-loc">${ev.location}</div>
+      </div>
+      <button class="btn-remove" type="button">Удалить</button>
+    `;
+    card.querySelector('.btn-remove').addEventListener('click', () => {
+      state.events = state.events.filter((x) => x.id !== ev.id);
+      saveState();
+      renderAdmin();
+      showToast(`Мероприятие «${ev.title}» удалено`, 'info');
+    });
+    evList.appendChild(card);
+  });
+
+  // 2. Список расписания занятий
+  const schList = document.getElementById('admin-schedule-list');
+  schList.innerHTML = '';
+  state.schedule.forEach((item) => {
+    const catName = CITIES[item.category]?.shortName || item.category;
+    const card = document.createElement('div');
+    card.className = 'card event-card';
+    card.innerHTML = `
+      <div class="event-time-box cat-${item.category}">
+        <strong>${item.day}</strong>
+        <span>${item.time}</span>
+      </div>
+      <div class="event-info">
+        <div class="event-top-row">
+          <span class="event-cat-pill cat-${item.category}">${catName}</span>
+        </div>
+        <div class="event-title">${item.title}</div>
+        <div class="event-loc">${item.place} · ${item.mentor}</div>
+      </div>
+      <button class="btn-remove" type="button">Удалить</button>
+    `;
+    card.querySelector('.btn-remove').addEventListener('click', () => {
+      state.schedule = state.schedule.filter((x) => x.id !== item.id);
+      saveState();
+      renderAdmin();
+      showToast(`Занятие «${item.title}» удалено из расписания`, 'info');
+    });
+    schList.appendChild(card);
+  });
+
+  // 3. Проверка заявок студентов (только администратор выставляет L, A, R!)
+  const revList = document.getElementById('admin-reviews-list');
+  revList.innerHTML = '';
+  if (pending.length === 0) {
+    revList.innerHTML = '<div class="card"><p class="modal-desc">Заявок на проверке сейчас нет.</p></div>';
+  } else {
+    pending.forEach((a) => {
+      const catName = CITIES[a.category]?.shortName || a.category;
+      const item = document.createElement('div');
+      item.className = 'diary-item';
+      item.innerHTML = `
+        <div class="diary-item-top">
+          <strong>${a.title}</strong>
+          <span class="event-cat-pill cat-${a.category}">${catName}</span>
+        </div>
+        <div class="diary-meta">ID студента: ${a.studentId || state.profile.id} · ${a.createdAt}</div>
+        ${a.note ? `<div class="diary-meta">Комментарий: ${a.note}</div>` : ''}
+        <div class="form-row-3">
+          <select class="form-input rev-L">
+            <option value="0.25">L=0.25</option>
+            <option value="0.50">L=0.50</option>
+            <option value="0.75">L=0.75</option>
+            <option value="1.00">L=1.00</option>
+          </select>
+          <select class="form-input rev-A">
+            <option value="1">A=1</option>
+            <option value="2">A=2</option>
+            <option value="3">A=3</option>
+          </select>
+          <select class="form-input rev-R">
+            <option value="0">R=0</option>
+            <option value="1">R=1</option>
+            <option value="2">R=2</option>
+            <option value="2.5">R=2.5</option>
+            <option value="3">R=3</option>
+          </select>
+        </div>
+        <div class="input-with-btn">
+          <button class="btn-primary btn-sm rev-approve" type="button">Одобрить и начислить</button>
+          <button class="btn-remove rev-reject" type="button">Отклонить</button>
+        </div>
+      `;
+      item.querySelector('.rev-approve').addEventListener('click', () => {
+        const L = Number(item.querySelector('.rev-L').value);
+        const A = Number(item.querySelector('.rev-A').value);
+        const R = Number(item.querySelector('.rev-R').value);
+        const res = calculateEventRewards({ V: 1, A, L, R, currentTotalAP: getTotalAP() });
+        a.L = L;
+        a.A = A;
+        a.R = R;
+        a.V = 1;
+        a.status = 'approved';
+        a.AP = res.AP;
+        a.DP = res.DP;
+        state.coinsEarned += res.DP;
+        saveState();
+        renderAdmin();
+        renderHome();
+        showToast(`Одобрено: +${res.AP} XP и +${res.DP} совиков`, 'success');
+      });
+      item.querySelector('.rev-reject').addEventListener('click', () => {
+        a.V = 0;
+        a.status = 'rejected';
+        a.AP = 0;
+        a.DP = 0;
+        saveState();
+        renderAdmin();
+        showToast('Заявка отклонена', 'warning');
+      });
+      revList.appendChild(item);
+    });
+  }
+
+  refreshAdminCodeBox();
+  stopAdminCodeTimer();
+  adminCodeTimerHandle = setInterval(refreshAdminCodeBox, 1000);
+}
+
 function renderAll() {
   renderHome();
   if (activeScreen === 'city') renderCity();
@@ -540,56 +814,54 @@ function renderAll() {
   if (activeScreen === 'profile') renderProfile();
   if (activeScreen === 'calendar') renderCalendar();
   if (activeScreen === 'rating') renderRating();
+  if (activeScreen === 'admin') renderAdmin();
 }
 
-/* ---------- Дневник (без модерации) ---------- */
+/* ---------- Дневник и лимит 5 заявок в неделю ---------- */
 function renderDiary() {
   const listEl = document.getElementById('diary-items-list');
   listEl.innerHTML = '';
 
   if (state.achievements.length === 0) {
     listEl.innerHTML = '<p class="modal-desc">В дневнике пока нет записей. Подайте заявку или подтвердите участие на мероприятии.</p>';
-    return;
+  } else {
+    [...state.achievements].reverse().forEach((a) => {
+      const statusMap = {
+        approved: { cls: 'pill-success', text: 'Подтверждено' },
+        pending: { cls: 'pill-warning', text: 'На проверке' },
+        rejected: { cls: 'pill-danger', text: 'Отклонено' }
+      };
+      const st = statusMap[a.status] || statusMap.pending;
+      const cityName = CITIES[a.category]?.shortName || a.category;
+      const item = document.createElement('div');
+      item.className = 'diary-item';
+      item.innerHTML = `
+        <div class="diary-item-top">
+          <strong>${a.title}</strong>
+          <span class="pill ${st.cls}">${st.text}</span>
+        </div>
+        <div class="diary-meta">${cityName} · ${a.createdAt}</div>
+        <div class="diary-meta"><strong>${a.status === 'approved' ? `+${a.AP} XP, +${a.DP} совиков` : a.status === 'pending' ? 'На проверке администратором' : 'Отклонено · 0 XP'}</strong></div>
+      `;
+      listEl.appendChild(item);
+    });
   }
 
-  [...state.achievements].reverse().forEach((a) => {
-    const statusMap = {
-      approved: { cls: 'pill-success', text: 'Подтверждено' },
-      pending: { cls: 'pill-warning', text: 'На проверке' },
-      rejected: { cls: 'pill-danger', text: 'Отклонено' }
-    };
-    const st = statusMap[a.status] || statusMap.pending;
-    const cityName = CITIES[a.category]?.shortName || a.category;
-    const item = document.createElement('div');
-    item.className = 'diary-item';
-    item.innerHTML = `
-      <div class="diary-item-top">
-        <strong>${a.title}</strong>
-        <span class="pill ${st.cls}">${st.text}</span>
-      </div>
-      <div class="diary-meta">${cityName} · ${a.createdAt}</div>
-      <div class="diary-meta"><strong>${a.status === 'approved' ? `+${a.AP} XP, +${a.DP} совиков` : a.status === 'pending' ? `Ожидается: +${a.AP} XP, +${a.DP} совиков` : '0 XP'}</strong></div>
-    `;
-    listEl.appendChild(item);
-  });
+  renderApplicationQuota();
 }
 
-function updateApplicationPreview() {
-  const L = Number(document.getElementById('app-level').value);
-  const A = Number(document.getElementById('app-activity').value);
-  const R = Number(document.getElementById('app-result').value);
-  const res = calculateEventRewards({
-    V: 1,
-    A,
-    L,
-    R,
-    currentTotalAP: getTotalAP()
-  });
-  document.getElementById('app-formula-preview').innerHTML = `
-    <strong>Расчёт награды:</strong><br/>
-    D̂ = ${res.dHat} · B = ${res.B} · Коэффициент лиги K = ${res.K.toFixed(2)}<br/>
-    Награда после подтверждения: <strong>+${res.AP} XP</strong> и <strong>+${res.DP} совиков</strong>
-  `;
+function renderApplicationQuota() {
+  const used = getWeeklySubmissionsCount(state.profile.id);
+  const remaining = Math.max(0, MAX_WEEKLY_APPLICATIONS - used);
+  const quotaEl = document.getElementById('app-weekly-limit-info');
+  const submitBtn = document.getElementById('btn-submit-application');
+  if (quotaEl) {
+    quotaEl.textContent = `Заявок на этой неделе для ID ${state.profile.id}: ${used} из ${MAX_WEEKLY_APPLICATIONS} (осталось ${remaining})`;
+  }
+  if (submitBtn) {
+    submitBtn.disabled = remaining === 0;
+    submitBtn.title = remaining === 0 ? 'Достигнут недельный лимит: 5 заявок для одного ID' : '';
+  }
 }
 
 /* ---------- Кастомизация комнаты ---------- */
@@ -651,23 +923,15 @@ function openShop(slot = 'wallColor') {
   openModal('modal-shop');
 }
 
-/* ---------- 6-значный код подтверждения ---------- */
-async function refreshLiveCodeBox() {
-  const info = await fetchCurrentCodeInfo();
-  document.getElementById('organizer-live-code').textContent = info.code;
-  document.getElementById('organizer-code-timer').textContent =
-    `Обновление через ${info.secondsRemaining} с`;
-  document.getElementById('code-timer-fill').style.width =
-    `${Math.round((info.secondsRemaining / info.periodSeconds) * 100)}%`;
-}
-
+/* ---------- Подтверждение участия по коду ---------- */
 function openVerifyModal(preselectEventId = null) {
   const select = document.getElementById('verify-event-select');
   select.innerHTML = '';
-  CALENDAR_EVENTS.forEach((ev) => {
+  state.events.forEach((ev) => {
     const opt = document.createElement('option');
     opt.value = ev.id;
-    opt.textContent = `${ev.title} (${ev.categoryLabel})`;
+    const catName = CITIES[ev.category]?.shortName || ev.category;
+    opt.textContent = `${ev.title} (${catName})`;
     select.appendChild(opt);
   });
   if (preselectEventId) select.value = preselectEventId;
@@ -675,9 +939,16 @@ function openVerifyModal(preselectEventId = null) {
   document.getElementById('verify-code-input').value = '';
   document.getElementById('verify-code-error').classList.add('hidden');
   openModal('modal-verify-code');
-  refreshLiveCodeBox();
-  if (codeTimerHandle) clearInterval(codeTimerHandle);
-  codeTimerHandle = setInterval(refreshLiveCodeBox, 1000);
+}
+
+function openAdminLoginModal() {
+  if (adminToken) {
+    navigateTo('admin');
+    return;
+  }
+  document.getElementById('admin-password-input').value = '';
+  document.getElementById('admin-login-error').classList.add('hidden');
+  openModal('modal-admin-login');
 }
 
 /* ---------- Поиск студентов ---------- */
@@ -722,9 +993,14 @@ function init() {
     btn.addEventListener('click', () => navigateTo(btn.dataset.back));
   });
 
-  document.querySelectorAll('.desktop-sidebar .nav-link').forEach((btn) => {
+  document.querySelectorAll('.desktop-sidebar [data-nav]').forEach((btn) => {
     btn.addEventListener('click', () => navigateTo(btn.dataset.nav));
   });
+
+  // Кликабельный профиль в боковой панели и на главном экране
+  document.getElementById('btn-sidebar-profile').addEventListener('click', () => navigateTo('profile'));
+  document.getElementById('btn-home-quick-profile').addEventListener('click', () => navigateTo('profile'));
+  document.getElementById('btn-open-profile').addEventListener('click', () => navigateTo('profile'));
 
   document.getElementById('btn-sidebar-search').addEventListener('click', () => {
     renderStudentSearch('');
@@ -732,7 +1008,115 @@ function init() {
   });
   document.getElementById('btn-sidebar-verify').addEventListener('click', () => openVerifyModal());
 
-  document.getElementById('btn-open-profile').addEventListener('click', () => navigateTo('profile'));
+  // Вход в админ-панель с проверкой пароля
+  document.getElementById('btn-sidebar-admin').addEventListener('click', openAdminLoginModal);
+  document.getElementById('btn-open-admin').addEventListener('click', openAdminLoginModal);
+  document.getElementById('btn-admin-logout').addEventListener('click', () => {
+    adminToken = null;
+    stopAdminCodeTimer();
+    navigateTo('home');
+    showToast('Вы вышли из раздела администратора', 'info');
+  });
+
+  document.getElementById('btn-admin-login-submit').addEventListener('click', async () => {
+    const pwd = document.getElementById('admin-password-input').value;
+    const errEl = document.getElementById('admin-login-error');
+    if (!pwd) {
+      errEl.textContent = 'Введите пароль.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+    const token = await authenticateAdmin(pwd);
+    if (!token) {
+      errEl.textContent = 'Неверный пароль. Попробуйте ещё раз.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+    errEl.classList.add('hidden');
+    adminToken = token;
+    closeModal('modal-admin-login');
+    navigateTo('admin');
+    showToast('Вход в панель администратора выполнен', 'success');
+  });
+
+  // Вкладки админ-панели
+  document.querySelectorAll('[data-admin-tab]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-admin-tab]').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-pane').forEach((p) => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`admin-tab-${btn.dataset.adminTab}`).classList.add('active');
+    });
+  });
+
+  document.getElementById('btn-admin-add-event').addEventListener('click', () => {
+    const title = document.getElementById('adm-ev-title').value.trim();
+    if (!title) {
+      showToast('Укажите название мероприятия или праздника', 'warning');
+      return;
+    }
+    const category = document.getElementById('adm-ev-cat').value;
+    const kind = document.getElementById('adm-ev-kind').value;
+    const location = document.getElementById('adm-ev-place').value.trim() || 'Кампус университета';
+    const dateLabel = document.getElementById('adm-ev-date').value.trim() || '27 ноя';
+    const time = document.getElementById('adm-ev-time').value.trim() || '12:00';
+    const dayOffset = Number(document.getElementById('adm-ev-day').value) || 0;
+    const L = Number(document.getElementById('adm-ev-level').value);
+    const A = Number(document.getElementById('adm-ev-activity').value);
+    const R = Number(document.getElementById('adm-ev-result').value);
+    const preview = calculateEventRewards({ V: 1, A, L, R, currentTotalAP: getTotalAP() });
+
+    state.events.unshift({
+      id: `ev-${Date.now()}`,
+      dayOffset,
+      dateLabel,
+      time,
+      category,
+      categoryLabel: CITIES[category]?.shortName || category,
+      kind,
+      title,
+      location,
+      L,
+      A,
+      R,
+      xpPreview: preview.AP
+    });
+    saveState();
+    document.getElementById('adm-ev-title').value = '';
+    document.getElementById('adm-ev-place').value = '';
+    renderAdmin();
+    showToast(`Добавлено в афишу: ${title}`, 'success');
+  });
+
+  document.getElementById('btn-admin-add-schedule').addEventListener('click', () => {
+    const title = document.getElementById('adm-sch-title').value.trim();
+    if (!title) {
+      showToast('Укажите название занятия', 'warning');
+      return;
+    }
+    const category = document.getElementById('adm-sch-cat').value;
+    const day = document.getElementById('adm-sch-day').value;
+    const time = document.getElementById('adm-sch-time').value.trim() || '16:00–17:30';
+    const place = document.getElementById('adm-sch-place').value.trim() || 'Главный корпус';
+    const mentor = document.getElementById('adm-sch-mentor').value.trim() || 'Преподаватель кафедры';
+
+    state.schedule.unshift({
+      id: `sch-${Date.now()}`,
+      day,
+      time,
+      title,
+      category,
+      place,
+      mentor
+    });
+    saveState();
+    document.getElementById('adm-sch-title').value = '';
+    document.getElementById('adm-sch-place').value = '';
+    document.getElementById('adm-sch-mentor').value = '';
+    renderAdmin();
+    showToast(`Занятие добавлено: ${title}`, 'success');
+  });
+
   document.getElementById('btn-open-calendar').addEventListener('click', () => navigateTo('calendar'));
   document.getElementById('btn-open-rating').addEventListener('click', () => navigateTo('rating'));
   document.getElementById('btn-enter-owl-house').addEventListener('click', () => navigateTo('owl'));
@@ -817,7 +1201,6 @@ function init() {
 
   const openDiary = () => {
     renderDiary();
-    updateApplicationPreview();
     openModal('modal-diary');
   };
   document.getElementById('btn-open-diary').addEventListener('click', openDiary);
@@ -829,16 +1212,20 @@ function init() {
       document.querySelectorAll('.diary-tab-pane').forEach((p) => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(`diary-tab-${btn.dataset.diaryTab}`).classList.add('active');
+      renderApplicationQuota();
     });
   });
 
-  ['app-level', 'app-activity', 'app-result'].forEach((id) => {
-    document.getElementById(id).addEventListener('change', updateApplicationPreview);
-  });
-
   document.getElementById('btn-submit-application').addEventListener('click', () => {
-    const title = document.getElementById('app-title').value.trim();
     const errEl = document.getElementById('app-form-error');
+    const used = getWeeklySubmissionsCount(state.profile.id);
+    if (used >= MAX_WEEKLY_APPLICATIONS) {
+      errEl.textContent = `Лимит исчерпан: можно отправить не более ${MAX_WEEKLY_APPLICATIONS} заявок в неделю для одного ID.`;
+      errEl.classList.remove('hidden');
+      return;
+    }
+
+    const title = document.getElementById('app-title').value.trim();
     if (!title) {
       errEl.textContent = 'Укажите название мероприятия.';
       errEl.classList.remove('hidden');
@@ -847,30 +1234,31 @@ function init() {
     errEl.classList.add('hidden');
 
     const category = document.getElementById('app-category').value;
-    const L = Number(document.getElementById('app-level').value);
-    const A = Number(document.getElementById('app-activity').value);
-    const R = Number(document.getElementById('app-result').value);
-
-    const preview = calculateEventRewards({ V: 1, A, L, R, currentTotalAP: getTotalAP() });
+    const note = document.getElementById('app-note').value.trim();
 
     state.achievements.push({
       id: `ach-${Date.now()}`,
       title,
       category,
-      L,
-      A,
-      R,
+      L: 0.25,
+      A: 1,
+      R: 0,
       V: 0,
       status: 'pending',
-      AP: preview.AP,
-      DP: preview.DP,
+      AP: 0,
+      DP: 0,
+      note,
+      source: 'application',
+      studentId: state.profile.id,
+      weekKey: getISOWeekKey(),
       createdAt: new Date().toLocaleDateString('ru-RU')
     });
     saveState();
     document.getElementById('app-title').value = '';
+    document.getElementById('app-note').value = '';
     renderDiary();
     document.querySelector('[data-diary-tab="list"]').click();
-    showToast('Заявка отправлена и добавлена в дневник', 'success');
+    showToast('Заявка отправлена администратору', 'success');
   });
 
   document.getElementById('btn-verify-attendance').addEventListener('click', () => openVerifyModal());
@@ -884,13 +1272,18 @@ function init() {
     }
     const valid = await verifySubmittedCode(code);
     if (!valid) {
-      errEl.textContent = 'Неверный или устаревший код. Проверьте актуальный код организатора.';
+      errEl.textContent = 'Неверный или устаревший код. Уточните код у организатора.';
       errEl.classList.remove('hidden');
       return;
     }
     errEl.classList.add('hidden');
     const evId = document.getElementById('verify-event-select').value;
-    const ev = CALENDAR_EVENTS.find((e) => e.id === evId) || CALENDAR_EVENTS[0];
+    const ev = state.events.find((e) => e.id === evId) || state.events[0];
+    if (!ev) {
+      errEl.textContent = 'Список мероприятий пуст.';
+      errEl.classList.remove('hidden');
+      return;
+    }
     const res = calculateEventRewards({
       V: 1,
       A: ev.A,
@@ -909,6 +1302,9 @@ function init() {
       status: 'approved',
       AP: res.AP,
       DP: res.DP,
+      source: 'code',
+      studentId: state.profile.id,
+      weekKey: getISOWeekKey(),
       createdAt: new Date().toLocaleDateString('ru-RU')
     });
     state.coinsEarned += res.DP;
@@ -974,6 +1370,22 @@ function init() {
     openModal('modal-match3');
   });
   document.getElementById('btn-m3-hint').addEventListener('click', () => match3.highlightHint());
+
+  // Афиша: переключение Мероприятия / Расписание занятий
+  document.getElementById('cal-tab-events').addEventListener('click', () => {
+    calendarTab = 'events';
+    document.getElementById('cal-tab-events').classList.add('active');
+    document.getElementById('cal-tab-schedule').classList.remove('active');
+    document.getElementById('calendar-events-pane').classList.add('active');
+    document.getElementById('calendar-schedule-pane').classList.remove('active');
+  });
+  document.getElementById('cal-tab-schedule').addEventListener('click', () => {
+    calendarTab = 'schedule';
+    document.getElementById('cal-tab-schedule').classList.add('active');
+    document.getElementById('cal-tab-events').classList.remove('active');
+    document.getElementById('calendar-schedule-pane').classList.add('active');
+    document.getElementById('calendar-events-pane').classList.remove('active');
+  });
 
   document.querySelectorAll('#calendar-filters button').forEach((chip) => {
     chip.addEventListener('click', () => {

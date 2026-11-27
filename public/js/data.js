@@ -165,18 +165,19 @@ export const DECOR_SHOP = {
 
 export const CALENDAR_EVENTS = [
   {
-    id: 'ev-run',
+    id: 'ev-health-day',
     dayOffset: 0,
     dateLabel: '27 ноя',
-    time: '08:00',
+    time: '09:00',
     category: 'sport',
     categoryLabel: 'Качалово',
-    title: 'Утренняя пробежка',
+    kind: 'Праздник',
+    title: 'День Здоровья',
     location: 'Стадион кампуса',
-    L: 0.25,
+    L: 0.50,
     A: 1,
     R: 0,
-    xpPreview: 26
+    xpPreview: 42
   },
   {
     id: 'ev-quiz',
@@ -185,12 +186,13 @@ export const CALENDAR_EVENTS = [
     time: '13:00',
     category: 'science',
     categoryLabel: 'Любознайка',
+    kind: 'Мероприятие',
     title: 'Научный квиз',
     location: 'Корпус Б, аудитория 204',
     L: 0.50,
     A: 2,
     R: 2,
-    xpPreview: 82
+    xpPreview: 70
   },
   {
     id: 'ev-ceramic',
@@ -199,6 +201,7 @@ export const CALENDAR_EVENTS = [
     time: '16:00',
     category: 'creativity',
     categoryLabel: 'Фантазерск',
+    kind: 'Мероприятие',
     title: 'Мастерская керамики',
     location: 'Арт-пространство',
     L: 0.25,
@@ -213,6 +216,7 @@ export const CALENDAR_EVENTS = [
     time: '18:00',
     category: 'social',
     categoryLabel: 'Движняково',
+    kind: 'Мероприятие',
     title: 'Встреча волонтёров',
     location: 'Студенческий центр',
     L: 0.50,
@@ -227,12 +231,52 @@ export const CALENDAR_EVENTS = [
     time: '10:00',
     category: 'science',
     categoryLabel: 'Любознайка',
+    kind: 'Мероприятие',
     title: 'Университетский хакатон',
     location: 'Точка кипения',
     L: 0.75,
     A: 2,
     R: 3,
     xpPreview: 84
+  }
+];
+
+export const DEFAULT_SCHEDULE = [
+  {
+    id: 'sch-1',
+    day: 'Пн',
+    time: '16:00–17:30',
+    title: 'Секция функциональной подготовки',
+    category: 'sport',
+    place: 'Спортзал №1',
+    mentor: 'А. В. Орлов'
+  },
+  {
+    id: 'sch-2',
+    day: 'Вт',
+    time: '17:00–18:30',
+    title: 'Лаборатория научного анализа',
+    category: 'science',
+    place: 'Корпус А, ауд. 312',
+    mentor: 'Е. С. Тихонова'
+  },
+  {
+    id: 'sch-3',
+    day: 'Ср',
+    time: '18:00–19:30',
+    title: 'Арт-студия и дизайн',
+    category: 'creativity',
+    place: 'Арт-пространство',
+    mentor: 'М. И. Белова'
+  },
+  {
+    id: 'sch-4',
+    day: 'Чт',
+    time: '16:30–18:00',
+    title: 'Штаб студенческих инициатив',
+    category: 'social',
+    place: 'Студенческий центр',
+    mentor: 'Д. А. Соколов'
   }
 ];
 

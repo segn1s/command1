@@ -61,6 +61,23 @@
   --backdrop:
     radial-gradient(55% 45% at 85% 5%, rgb(var(--brand-rgb) / 0.12), transparent 70%),
     radial-gradient(45% 45% at 5% 95%, rgb(var(--brand-rgb) / 0.07), transparent 70%);
+
+  /* Цвета направлений мероприятий */
+  --ev-sport-bg: #dcfce7;
+  --ev-sport-border: #86efac;
+  --ev-sport-text: #15803d;
+
+  --ev-science-bg: #ede9fe;
+  --ev-science-border: #c4b5fd;
+  --ev-science-text: #5b21b6;
+
+  --ev-art-bg: #fce7f3;
+  --ev-art-border: #f9a8d4;
+  --ev-art-text: #be185d;
+
+  --ev-social-bg: #fef08a;
+  --ev-social-border: #facc15;
+  --ev-social-text: #854d0e;
 }
 
 :root[data-season="autumn"] {
@@ -426,6 +443,14 @@ select:focus-visible {
   align-items: center;
   justify-content: space-around;
   padding: 12px;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.home-quick-bar:hover {
+  background: var(--white);
+  border-color: var(--brand);
 }
 
 .quick-stat {
@@ -892,6 +917,51 @@ select:focus-visible {
   border-color: var(--brand);
 }
 
+.cal-pane,
+.admin-tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cal-pane.active,
+.admin-tab-pane.active {
+  display: flex;
+}
+
+.admin-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 539px) {
+  .form-row-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.btn-remove {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-control);
+  border: 1px solid rgb(var(--danger-rgb) / 0.3);
+  background: rgb(var(--danger-rgb) / 0.06);
+  color: var(--danger-text);
+  cursor: pointer;
+}
+
+.btn-remove:hover:not(:disabled) {
+  background: rgb(var(--danger-rgb) / 0.12);
+}
+
 .event-time-box {
   width: 68px;
   height: 64px;
@@ -906,13 +976,56 @@ select:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
+.event-time-box.cat-sport {
+  background: var(--ev-sport-bg);
+  color: var(--ev-sport-text);
+  border: 1px solid var(--ev-sport-border);
+}
+
+.event-time-box.cat-science {
+  background: var(--ev-science-bg);
+  color: var(--ev-science-text);
+  border: 1px solid var(--ev-science-border);
+}
+
+.event-time-box.cat-creativity {
+  background: var(--ev-art-bg);
+  color: var(--ev-art-text);
+  border: 1px solid var(--ev-art-border);
+}
+
+.event-time-box.cat-social {
+  background: var(--ev-social-bg);
+  color: var(--ev-social-text);
+  border: 1px solid var(--ev-social-border);
+}
+
+.event-cat-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.event-cat-pill.cat-sport { background: var(--ev-sport-bg); color: var(--ev-sport-text); }
+.event-cat-pill.cat-science { background: var(--ev-science-bg); color: var(--ev-science-text); }
+.event-cat-pill.cat-creativity { background: var(--ev-art-bg); color: var(--ev-art-text); }
+.event-cat-pill.cat-social { background: var(--ev-social-bg); color: var(--ev-social-text); }
+
+.cat-chip-sport.active { background: var(--ev-sport-bg); border-color: var(--ev-sport-border); color: var(--ev-sport-text); }
+.cat-chip-science.active { background: var(--ev-science-bg); border-color: var(--ev-science-border); color: var(--ev-science-text); }
+.cat-chip-creativity.active { background: var(--ev-art-bg); border-color: var(--ev-art-border); color: var(--ev-art-text); }
+.cat-chip-social.active { background: var(--ev-social-bg); border-color: var(--ev-social-border); color: var(--ev-social-text); }
+
 .event-time-box strong {
   font-size: 14px;
 }
 
 .event-time-box span {
   font-size: 12px;
-  color: var(--text-muted);
+  opacity: 0.85;
 }
 
 .event-info {
@@ -1835,6 +1948,15 @@ select:focus-visible {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .sidebar-user-card:hover {
+    background: var(--white);
+    border-color: var(--brand);
   }
 
   .sidebar-user-top {
@@ -1842,6 +1964,21 @@ select:focus-visible {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+    width: 100%;
+  }
+
+  .sidebar-profile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .sidebar-profile-arrow {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand);
   }
 
   .sidebar-user-stats {
