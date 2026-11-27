@@ -1,0 +1,13 @@
+{
+  "name": "command1-student-city",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Геймифицированный профиль студента — виртуальные города достижений на Cloudflare Workers",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

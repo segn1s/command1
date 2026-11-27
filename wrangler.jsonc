@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "command1-student-city",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-27",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}
