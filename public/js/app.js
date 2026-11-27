@@ -101,6 +101,8 @@ function createInitialState() {
     },
     coinsEarned: 18,
     coinsSpent: 0,
+    lastMatch3PlayedDate: null,
+    lastMatch3Earned: 0,
     ownedDecor: [
       'wall-fog',
       'light-day',
@@ -166,6 +168,18 @@ function getTotalAP() {
 
 function getCoinsBalance() {
   return Math.max(0, state.coinsEarned - state.coinsSpent);
+}
+
+function getTodayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function hasPlayedMatch3Today() {
+  return state.lastMatch3PlayedDate === getTodayKey();
 }
 
 function showToast(msg, variant = 'info') {
@@ -310,6 +324,10 @@ function renderOwlHouse() {
     DECOR_SHOP,
     owlMood
   );
+  const m3Sub = document.getElementById('owl-match3-subtitle');
+  if (m3Sub) {
+    m3Sub.textContent = hasPlayedMatch3Today() ? 'Сыграно сегодня' : '1 игра в день · на совики';
+  }
 }
 
 function getAllLeaderboardStudents() {
@@ -855,13 +873,24 @@ function init() {
     comboEl: document.getElementById('m3-combo'),
     earnedEl: document.getElementById('m3-earned'),
     progressEl: document.getElementById('m3-progress-fill'),
-    statusEl: document.getElementById('m3-status-text')
+    statusEl: document.getElementById('m3-status-text'),
+    onFirstMove: () => {
+      state.lastMatch3PlayedDate = getTodayKey();
+      state.lastMatch3Earned = 0;
+      saveState();
+      renderOwlHouse();
+    },
+    onUpdate: ({ earnedCoins }) => {
+      state.lastMatch3Earned = earnedCoins;
+      saveState();
+    }
   });
 
   const bankMatch3Coins = (silentIfZero = true) => {
     const coins = match3.claimCoins();
     if (coins > 0) {
       state.coinsEarned += coins;
+      state.lastMatch3Earned = coins;
       saveState();
       renderOwlHouse();
       renderHome();
@@ -874,14 +903,25 @@ function init() {
   window.__claimMatch3OnClose = () => bankMatch3Coins(true);
 
   document.getElementById('btn-open-match3').addEventListener('click', () => {
-    match3.start();
+    const lockedBox = document.getElementById('m3-daily-locked');
+    const activeArea = document.getElementById('m3-active-area');
+    const lockedDesc = document.getElementById('m3-locked-desc');
+
+    if (hasPlayedMatch3Today()) {
+      activeArea.classList.add('hidden');
+      lockedBox.classList.remove('hidden');
+      lockedDesc.textContent =
+        state.lastMatch3Earned > 0
+          ? `Сегодня вы уже сыграли и получили +${state.lastMatch3Earned} совиков. Возвращайтесь завтра.`
+          : 'В «Три в ряд» можно играть 1 раз в день. Возвращайтесь завтра за новой попыткой.';
+    } else {
+      lockedBox.classList.add('hidden');
+      activeArea.classList.remove('hidden');
+      match3.start();
+    }
     openModal('modal-match3');
   });
   document.getElementById('btn-m3-hint').addEventListener('click', () => match3.highlightHint());
-  document.getElementById('btn-m3-restart').addEventListener('click', () => {
-    bankMatch3Coins(true);
-    match3.start();
-  });
 
   document.querySelectorAll('#calendar-filters button').forEach((chip) => {
     chip.addEventListener('click', () => {

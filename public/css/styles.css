@@ -1093,11 +1093,16 @@ select:focus-visible {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pane);
   box-shadow: var(--shadow-pane);
-  max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.modal-content > * {
+  flex-shrink: 0;
 }
 
 .modal-head {
@@ -1314,9 +1319,17 @@ select:focus-visible {
 }
 
 /* Три в ряд 7x7 */
+.m3-active-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
 .match3-hud {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -1370,36 +1383,49 @@ select:focus-visible {
 
 .match3-board {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 4px;
   width: 100%;
-  max-width: 360px;
+  max-width: 322px;
   margin: 0 auto;
   background: var(--gray-100);
   border: 1px solid var(--gray-200);
-  padding: 8px;
+  padding: 6px;
   border-radius: var(--radius-card);
   user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .m3-cell {
-  aspect-ratio: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius-control);
   border: 2px solid transparent;
   background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   cursor: pointer;
-  padding: 4px;
+  padding: 0;
+  margin: 0;
+  font-size: 0;
+  line-height: 0;
   position: relative;
+  overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
   transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
 }
 
 .m3-cell svg {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 14%;
+  width: 72%;
+  height: 72%;
   display: block;
+  pointer-events: none;
 }
 
 .m3-cell.selected {
@@ -1447,6 +1473,10 @@ select:focus-visible {
   gap: 8px;
 }
 
+.match3-footer.single-footer {
+  grid-template-columns: 1fr;
+}
+
 /* Адаптация под экраны телефонов */
 .filter-chips {
   scrollbar-width: none;
@@ -1465,9 +1495,10 @@ select:focus-visible {
 
   .modal-content {
     max-width: 100%;
-    max-height: 92dvh;
+    max-height: 86dvh;
     border-radius: var(--radius-pane) var(--radius-pane) 0 0;
-    padding: 1rem 1rem calc(1.25rem + env(safe-area-inset-bottom));
+    padding: 0.875rem 1rem calc(1rem + env(safe-area-inset-bottom));
+    gap: 10px;
   }
 
   .form-input {
@@ -1552,12 +1583,9 @@ select:focus-visible {
   }
 
   .match3-board {
+    max-width: 294px;
     gap: 3px;
-    padding: 6px;
-  }
-
-  .m3-cell {
-    padding: 2px;
+    padding: 5px;
   }
 }
 

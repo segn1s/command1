@@ -192,7 +192,7 @@
           </button>
           <button id="btn-open-match3" class="btn-primary btn action-tile" type="button">
             <strong>Три в ряд</strong>
-            <span>Игра на совики</span>
+            <span id="owl-match3-subtitle">1 игра в день · на совики</span>
           </button>
         </div>
       </section>
@@ -490,28 +490,34 @@
       <div class="modal-head">
         <div>
           <h3 id="match3-modal-title">Три в ряд</h3>
-          <p class="modal-subtitle">Собирайте линии от 3 фишек. Заработанные совики начисляются при закрытии игры (✕).</p>
+          <p class="modal-subtitle">Доступна 1 игра в день. Совики начисляются при закрытии окна (✕).</p>
         </div>
         <button id="btn-m3-close" class="btn-secondary btn-sm close-modal-btn" data-close="modal-match3" type="button" aria-label="Забрать совики и закрыть">✕</button>
       </div>
 
-      <div class="match3-hud">
-        <div class="hud-pill"><span>Очки</span><strong id="m3-score">0</strong></div>
-        <div class="hud-pill"><span>Ходы</span><strong id="m3-moves">18</strong></div>
-        <div class="hud-pill"><span>Серия</span><strong id="m3-combo">x1</strong></div>
-        <div class="hud-pill hud-coins"><span>Совики</span><strong id="m3-earned">+0</strong></div>
+      <div id="m3-daily-locked" class="card milestone-card hidden">
+        <strong>Сегодняшняя попытка использована</strong>
+        <span id="m3-locked-desc">В «Три в ряд» можно играть 1 раз в день. Возвращайтесь завтра за новой попыткой.</span>
       </div>
 
-      <div class="match3-progress-wrap">
-        <div id="m3-progress-fill" class="match3-progress-fill" style="width: 0%"></div>
-      </div>
-      <p id="m3-status-text" class="match3-status-text">Меняйте местами соседние фишки для сбора комбинаций</p>
+      <div id="m3-active-area" class="m3-active-area">
+        <div class="match3-hud">
+          <div class="hud-pill"><span>Очки</span><strong id="m3-score">0</strong></div>
+          <div class="hud-pill"><span>Ходы</span><strong id="m3-moves">18</strong></div>
+          <div class="hud-pill"><span>Серия</span><strong id="m3-combo">x1</strong></div>
+          <div class="hud-pill hud-coins"><span>Совики</span><strong id="m3-earned">+0</strong></div>
+        </div>
 
-      <div id="match3-board" class="match3-board" aria-label="Игровое поле Три в ряд"></div>
+        <div class="match3-progress-wrap">
+          <div id="m3-progress-fill" class="match3-progress-fill" style="width: 0%"></div>
+        </div>
+        <p id="m3-status-text" class="match3-status-text">Меняйте местами соседние фишки для сбора комбинаций</p>
 
-      <div class="match3-footer">
-        <button id="btn-m3-hint" class="btn-secondary" type="button">Подсказка</button>
-        <button id="btn-m3-restart" class="btn-secondary" type="button">Заново</button>
+        <div id="match3-board" class="match3-board" aria-label="Игровое поле Три в ряд"></div>
+
+        <div class="match3-footer single-footer">
+          <button id="btn-m3-hint" class="btn-secondary full-width" type="button">Подсказка</button>
+        </div>
       </div>
     </div>
   </div>

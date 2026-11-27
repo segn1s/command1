@@ -49,7 +49,7 @@ function sleep(ms) {
 }
 
 export class Match3Game {
-  constructor({ boardEl, scoreEl, movesEl, comboEl, earnedEl, progressEl, statusEl, onUpdate }) {
+  constructor({ boardEl, scoreEl, movesEl, comboEl, earnedEl, progressEl, statusEl, onUpdate, onFirstMove }) {
     this.boardEl = boardEl;
     this.scoreEl = scoreEl;
     this.movesEl = movesEl;
@@ -58,12 +58,14 @@ export class Match3Game {
     this.progressEl = progressEl;
     this.statusEl = statusEl;
     this.onUpdate = onUpdate;
+    this.onFirstMove = onFirstMove;
 
     this.grid = [];
     this.selected = null;
     this.hintPair = null;
     this.clearingKeys = new Set();
     this.busy = false;
+    this.hasMoved = false;
     this.score = 0;
     this.moves = INITIAL_MOVES;
     this.combo = 1;
@@ -79,6 +81,7 @@ export class Match3Game {
     this.moves = INITIAL_MOVES;
     this.combo = 1;
     this.earnedCoins = 0;
+    this.hasMoved = false;
     this.selected = null;
     this.hintPair = null;
     this.clearingKeys.clear();
@@ -154,6 +157,10 @@ export class Match3Game {
 
     this.moves -= 1;
     this.combo = 1;
+    if (!this.hasMoved) {
+      this.hasMoved = true;
+      if (this.onFirstMove) this.onFirstMove();
+    }
 
     if (starTriggered) {
       const targetType = a?.special === 'star' ? b?.type : a?.type;
@@ -174,7 +181,7 @@ export class Match3Game {
       this.shuffleBoard();
       this.setStatus('Нет доступных ходов — поле перемешано');
     } else if (this.moves === 0) {
-      this.setStatus(`Ходы закончились. Можно забрать +${this.earnedCoins} совиков или начать заново.`);
+      this.setStatus(`Ходы закончились. Закройте окно (✕), чтобы забрать +${this.earnedCoins} совиков.`);
     }
 
     this.busy = false;
@@ -396,9 +403,9 @@ export class Match3Game {
   }
 
   claimCoins() {
-    if (this.earnedCoins <= 0) return 0;
     const reward = this.earnedCoins;
-    this.start();
+    this.earnedCoins = 0;
+    this.score = 0;
     return reward;
   }
 
