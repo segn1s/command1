@@ -396,7 +396,7 @@ export class Match3Game {
   }
 
   claimCoins() {
-    if (this.busy || this.earnedCoins <= 0) return 0;
+    if (this.earnedCoins <= 0) return 0;
     const reward = this.earnedCoins;
     this.start();
     return reward;

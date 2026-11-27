@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Астросовье — профиль студента</title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
@@ -490,9 +490,9 @@
       <div class="modal-head">
         <div>
           <h3 id="match3-modal-title">Три в ряд</h3>
-          <p class="modal-subtitle">Собирайте линии от 3 кристаллов, 4 в ряд дают линейный заряд, 5 — звёздный взрыв</p>
+          <p class="modal-subtitle">Собирайте линии от 3 фишек. Заработанные совики начисляются при закрытии игры (✕).</p>
         </div>
-        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-match3" type="button" aria-label="Закрыть">✕</button>
+        <button id="btn-m3-close" class="btn-secondary btn-sm close-modal-btn" data-close="modal-match3" type="button" aria-label="Забрать совики и закрыть">✕</button>
       </div>
 
       <div class="match3-hud">
@@ -512,7 +512,6 @@
       <div class="match3-footer">
         <button id="btn-m3-hint" class="btn-secondary" type="button">Подсказка</button>
         <button id="btn-m3-restart" class="btn-secondary" type="button">Заново</button>
-        <button id="btn-m3-claim" class="btn-primary" type="button">Забрать совики</button>
       </div>
     </div>
   </div>

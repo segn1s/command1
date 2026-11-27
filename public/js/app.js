@@ -193,6 +193,9 @@ function openModal(id) {
 }
 
 function closeModal(id) {
+  if (id === 'modal-match3' && typeof window.__claimMatch3OnClose === 'function') {
+    window.__claimMatch3OnClose();
+  }
   document.getElementById(id).classList.add('hidden');
   if (id === 'modal-verify-code' && codeTimerHandle) {
     clearInterval(codeTimerHandle);
@@ -699,6 +702,14 @@ function init() {
     btn.addEventListener('click', () => closeModal(btn.dataset.close));
   });
 
+  document.querySelectorAll('.modal-overlay').forEach((overlay) => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        closeModal(overlay.id);
+      }
+    });
+  });
+
   document.getElementById('btn-open-search').addEventListener('click', () => {
     renderStudentSearch('');
     openModal('modal-search');
@@ -847,13 +858,7 @@ function init() {
     statusEl: document.getElementById('m3-status-text')
   });
 
-  document.getElementById('btn-open-match3').addEventListener('click', () => {
-    match3.start();
-    openModal('modal-match3');
-  });
-  document.getElementById('btn-m3-hint').addEventListener('click', () => match3.highlightHint());
-  document.getElementById('btn-m3-restart').addEventListener('click', () => match3.start());
-  document.getElementById('btn-m3-claim').addEventListener('click', () => {
+  const bankMatch3Coins = (silentIfZero = true) => {
     const coins = match3.claimCoins();
     if (coins > 0) {
       state.coinsEarned += coins;
@@ -861,9 +866,21 @@ function init() {
       renderOwlHouse();
       renderHome();
       showToast(`Начислено +${coins} совиков`, 'success');
-    } else {
+    } else if (!silentIfZero) {
       showToast('Наберите минимум 150 очков для получения 1 совика', 'warning');
     }
+  };
+
+  window.__claimMatch3OnClose = () => bankMatch3Coins(true);
+
+  document.getElementById('btn-open-match3').addEventListener('click', () => {
+    match3.start();
+    openModal('modal-match3');
+  });
+  document.getElementById('btn-m3-hint').addEventListener('click', () => match3.highlightHint());
+  document.getElementById('btn-m3-restart').addEventListener('click', () => {
+    bankMatch3Coins(true);
+    match3.start();
   });
 
   document.querySelectorAll('#calendar-filters button').forEach((chip) => {
