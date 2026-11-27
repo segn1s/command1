@@ -174,7 +174,7 @@ export class Match3Game {
       this.shuffleBoard();
       this.setStatus('Нет доступных ходов — поле перемешано');
     } else if (this.moves === 0) {
-      this.setStatus(`Ходы закончились. Можно забрать +${this.earnedCoins} коинов или начать заново.`);
+      this.setStatus(`Ходы закончились. Можно забрать +${this.earnedCoins} совиков или начать заново.`);
     }
 
     this.busy = false;

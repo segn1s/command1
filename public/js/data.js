@@ -6,8 +6,8 @@
 export const CITIES = {
   sport: {
     id: 'sport',
-    shortName: 'Спорт',
-    title: 'Город спорта',
+    shortName: 'Качалово',
+    title: 'Качалово',
     stages: ['Старт', 'Разминка', 'Арена', 'Чемпионы', 'Олимп'],
     buildings: [
       { level: 1, name: 'Беговая дорожка', desc: 'Утренние пробежки и первые рекорды' },
@@ -18,8 +18,8 @@ export const CITIES = {
   },
   creativity: {
     id: 'creativity',
-    shortName: 'Творчество',
-    title: 'Город творчества',
+    shortName: 'Фантазерск',
+    title: 'Фантазерск',
     stages: ['Старт', 'Эскизы', 'Вдохновение', 'Сцена', 'Мастерство'],
     buildings: [
       { level: 1, name: 'Студия скетчей', desc: 'Первые зарисовки и идеи' },
@@ -30,8 +30,8 @@ export const CITIES = {
   },
   science: {
     id: 'science',
-    shortName: 'Наука',
-    title: 'Город науки',
+    shortName: 'Любознайка',
+    title: 'Любознайка',
     stages: ['Старт', 'Открытия', 'Эксперименты', 'Горизонты', 'Академия'],
     buildings: [
       { level: 1, name: 'Библиотека', desc: 'База знаний и конспектов' },
@@ -42,8 +42,8 @@ export const CITIES = {
   },
   social: {
     id: 'social',
-    shortName: 'Общество',
-    title: 'Город общества',
+    shortName: 'Движняково',
+    title: 'Движняково',
     stages: ['Старт', 'Инициатива', 'Сообщество', 'Лидерство', 'Форум'],
     buildings: [
       { level: 1, name: 'Штаб волонтёров', desc: 'Добрые дела и помощь кампусу' },
@@ -156,7 +156,7 @@ export const CALENDAR_EVENTS = [
     dateLabel: '27 ноя',
     time: '08:00',
     category: 'sport',
-    categoryLabel: 'Спорт',
+    categoryLabel: 'Качалово',
     title: 'Утренняя пробежка',
     location: 'Стадион кампуса',
     L: 0.25,
@@ -170,7 +170,7 @@ export const CALENDAR_EVENTS = [
     dateLabel: '27 ноя',
     time: '13:00',
     category: 'science',
-    categoryLabel: 'Наука',
+    categoryLabel: 'Любознайка',
     title: 'Научный квиз',
     location: 'Корпус Б, аудитория 204',
     L: 0.50,
@@ -184,7 +184,7 @@ export const CALENDAR_EVENTS = [
     dateLabel: '28 ноя',
     time: '16:00',
     category: 'creativity',
-    categoryLabel: 'Творчество',
+    categoryLabel: 'Фантазерск',
     title: 'Мастерская керамики',
     location: 'Арт-пространство',
     L: 0.25,
@@ -198,7 +198,7 @@ export const CALENDAR_EVENTS = [
     dateLabel: '29 ноя',
     time: '18:00',
     category: 'social',
-    categoryLabel: 'Общество',
+    categoryLabel: 'Движняково',
     title: 'Встреча волонтёров',
     location: 'Студенческий центр',
     L: 0.50,
@@ -212,7 +212,7 @@ export const CALENDAR_EVENTS = [
     dateLabel: '30 ноя',
     time: '10:00',
     category: 'science',
-    categoryLabel: 'Наука',
+    categoryLabel: 'Любознайка',
     title: 'Университетский хакатон',
     location: 'Точка кипения',
     L: 0.75,

@@ -37,7 +37,6 @@ function createInitialState() {
       status: 'approved',
       AP: 70,
       DP: 7,
-      proof: 'Протокол_квиза.pdf',
       createdAt: '18.11.2026'
     },
     {
@@ -51,7 +50,6 @@ function createInitialState() {
       status: 'approved',
       AP: 60,
       DP: 6,
-      proof: 'Финиш_протокол.jpg',
       createdAt: '20.11.2026'
     },
     {
@@ -65,7 +63,6 @@ function createInitialState() {
       status: 'approved',
       AP: 60,
       DP: 6,
-      proof: 'Сертификат_волонтёра.pdf',
       createdAt: '22.11.2026'
     },
     {
@@ -79,7 +76,6 @@ function createInitialState() {
       status: 'approved',
       AP: 72,
       DP: 7,
-      proof: 'Диплом_2место.pdf',
       createdAt: '24.11.2026'
     },
     {
@@ -93,7 +89,6 @@ function createInitialState() {
       status: 'pending',
       AP: 84,
       DP: 8,
-      proof: 'Диплом_НК-042.pdf',
       createdAt: '26.11.2026'
     }
   ];
@@ -433,7 +428,7 @@ function renderRating() {
     ratingTab === 'league' ? myLeague.ruName : 'Общий рейтинг';
   document.getElementById('rating-league-sub').textContent =
     ratingTab === 'league'
-      ? `${myLeague.name} · множитель коинов K = ${myLeague.K.toFixed(2)}`
+      ? `${myLeague.name} · множитель совиков K = ${myLeague.K.toFixed(2)}`
       : 'Все участники «Астросовья»';
 
   const podiumEl = document.getElementById('rating-podium');
@@ -480,7 +475,7 @@ function renderRating() {
     : 'Достигнута высшая лига Diamond Owl';
   document.getElementById('rating-promo-desc').textContent = nextLeague
     ? `Ещё ${nextLeague.minAP - totalAP} XP до повышения множителя K = ${nextLeague.K.toFixed(2)}`
-    : 'Максимальный множитель коинов K = 1.20 активен';
+    : 'Максимальный множитель совиков K = 1.20 активен';
 }
 
 function renderAll() {
@@ -517,8 +512,8 @@ function renderDiary() {
         <strong>${a.title}</strong>
         <span class="pill ${st.cls}">${st.text}</span>
       </div>
-      <div class="diary-meta">${cityName} · L=${a.L} · A=${a.A} · R=${a.R} · ${a.proof || 'Без файла'}</div>
-      <div class="diary-meta"><strong>${a.status === 'approved' ? `+${a.AP} XP, +${a.DP} коинов` : a.status === 'pending' ? `Расчёт: +${a.AP} XP, +${a.DP} коинов` : '0 XP'}</strong></div>
+      <div class="diary-meta">${cityName} · ${a.createdAt}</div>
+      <div class="diary-meta"><strong>${a.status === 'approved' ? `+${a.AP} XP, +${a.DP} совиков` : a.status === 'pending' ? `Ожидается: +${a.AP} XP, +${a.DP} совиков` : '0 XP'}</strong></div>
     `;
     listEl.appendChild(item);
   });
@@ -536,9 +531,9 @@ function updateApplicationPreview() {
     currentTotalAP: getTotalAP()
   });
   document.getElementById('app-formula-preview').innerHTML = `
-    <strong>Расчёт по формуле:</strong><br/>
+    <strong>Расчёт награды:</strong><br/>
     D̂ = ${res.dHat} · B = ${res.B} · Коэффициент лиги K = ${res.K.toFixed(2)}<br/>
-    Награда после подтверждения: <strong>+${res.AP} XP</strong> и <strong>+${res.DP} коинов</strong>
+    Награда после подтверждения: <strong>+${res.AP} XP</strong> и <strong>+${res.DP} совиков</strong>
   `;
 }
 
@@ -570,7 +565,7 @@ function openShop(slot = 'wallColor') {
     card.innerHTML = `
       <span class="swatch-preview" style="background: ${item.swatch};"></span>
       <strong>${item.name}</strong>
-      <span class="diary-meta">${owned ? 'В наличии' : `${item.price} коинов`}</span>
+      <span class="diary-meta">${owned ? 'В наличии' : `${item.price} совиков`}</span>
       <button class="${equipped ? 'btn-secondary' : 'btn-primary'} btn-sm full-width" type="button" ${equipped ? 'disabled' : ''}>
         ${equipped ? 'Установлено' : owned ? 'Применить' : `Купить (${item.price})`}
       </button>
@@ -579,7 +574,7 @@ function openShop(slot = 'wallColor') {
       if (equipped) return;
       if (!owned) {
         if (getCoinsBalance() < item.price) {
-          showToast('Недостаточно коинов. Заработайте их в игре «Три в ряд» или на мероприятиях.', 'warning');
+          showToast('Недостаточно совиков. Заработайте их в игре «Три в ряд» или на мероприятиях.', 'warning');
           return;
         }
         state.coinsSpent += item.price;
@@ -648,7 +643,7 @@ function renderStudentSearch(query) {
         <strong>${s.nickname} (ID: ${s.id})</strong>
         <span class="pill pill-brand">${s.totalAP} XP</span>
       </div>
-      <div class="diary-meta">${lg.ruName} · Спорт: ${s.cities.sport} · Наука: ${s.cities.science} · Творчество: ${s.cities.creativity} · Общество: ${s.cities.social}</div>
+      <div class="diary-meta">${lg.ruName} · Качалово: ${s.cities.sport} · Любознайка: ${s.cities.science} · Фантазерск: ${s.cities.creativity} · Движняково: ${s.cities.social}</div>
     `;
     resultsEl.appendChild(row);
   });
@@ -684,7 +679,7 @@ function init() {
 
   const owlMessages = [
     ['Приветствуем в «Астросовье»', 'Нажмите на сову для совета или настройте цвет стен, свет и мебель комнаты.'],
-    ['Совет по развитию', 'Подтвердите участие в событии из афиши с помощью 6-значного кода, чтобы получить XP и коины.'],
+    ['Совет по развитию', 'Подтвердите участие в событии из афиши с помощью 6-значного кода, чтобы получить XP и совики.'],
     ['Оформление комнаты', 'Меняйте цвет стен, освещение и декор с помощью кнопок под комнатой или значков «+».']
   ];
   let owlMsgIdx = 0;
@@ -774,7 +769,6 @@ function init() {
     const L = Number(document.getElementById('app-level').value);
     const A = Number(document.getElementById('app-activity').value);
     const R = Number(document.getElementById('app-result').value);
-    const proof = document.getElementById('app-proof').value.trim() || 'Документ.pdf';
 
     const preview = calculateEventRewards({ V: 1, A, L, R, currentTotalAP: getTotalAP() });
 
@@ -789,12 +783,10 @@ function init() {
       status: 'pending',
       AP: preview.AP,
       DP: preview.DP,
-      proof,
       createdAt: new Date().toLocaleDateString('ru-RU')
     });
     saveState();
     document.getElementById('app-title').value = '';
-    document.getElementById('app-proof').value = '';
     renderDiary();
     document.querySelector('[data-diary-tab="list"]').click();
     showToast('Заявка отправлена и добавлена в дневник', 'success');
@@ -836,14 +828,13 @@ function init() {
       status: 'approved',
       AP: res.AP,
       DP: res.DP,
-      proof: 'Код посещения (6 цифр)',
       createdAt: new Date().toLocaleDateString('ru-RU')
     });
     state.coinsEarned += res.DP;
     saveState();
     closeModal('modal-verify-code');
     renderAll();
-    showToast(`Участие подтверждено: +${res.AP} XP и +${res.DP} коинов`, 'success');
+    showToast(`Участие подтверждено: +${res.AP} XP и +${res.DP} совиков`, 'success');
   });
 
   const match3 = new Match3Game({
@@ -869,9 +860,9 @@ function init() {
       saveState();
       renderOwlHouse();
       renderHome();
-      showToast(`Начислено +${coins} коинов`, 'success');
+      showToast(`Начислено +${coins} совиков`, 'success');
     } else {
-      showToast('Наберите минимум 150 очков для получения 1 коина', 'warning');
+      showToast('Наберите минимум 150 очков для получения 1 совика', 'warning');
     }
   });
 

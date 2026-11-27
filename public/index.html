@@ -39,25 +39,25 @@
         <div class="islands-cluster" aria-label="Тематические города">
           <button class="card island-card" data-city="creativity" type="button">
             <div class="island-svg-wrap" id="home-svg-creativity"></div>
-            <span class="island-label">Творчество</span>
+            <span class="island-label">Фантазерск</span>
             <span class="pill pill-brand" data-city-lvl="creativity">Уровень 0</span>
           </button>
 
           <button class="card island-card" data-city="sport" type="button">
             <div class="island-svg-wrap" id="home-svg-sport"></div>
-            <span class="island-label">Спорт</span>
+            <span class="island-label">Качалово</span>
             <span class="pill pill-brand" data-city-lvl="sport">Уровень 0</span>
           </button>
 
           <button class="card island-card" data-city="social" type="button">
             <div class="island-svg-wrap" id="home-svg-social"></div>
-            <span class="island-label">Общество</span>
+            <span class="island-label">Движняково</span>
             <span class="pill pill-brand" data-city-lvl="social">Уровень 0</span>
           </button>
 
           <button class="card island-card" data-city="science" type="button">
             <div class="island-svg-wrap" id="home-svg-science"></div>
-            <span class="island-label">Наука</span>
+            <span class="island-label">Любознайка</span>
             <span class="pill pill-brand" data-city-lvl="science">Уровень 0</span>
           </button>
         </div>
@@ -69,7 +69,7 @@
           </div>
           <div class="quick-stat-divider"></div>
           <div class="quick-stat">
-            <span class="quick-stat-label">Коины</span>
+            <span class="quick-stat-label">Совики</span>
             <strong id="home-total-coins">0</strong>
           </div>
           <div class="quick-stat-divider"></div>
@@ -109,7 +109,7 @@
           <button class="btn-secondary btn-sm" data-back="home" type="button" aria-label="Назад">
             ← Назад
           </button>
-          <h2 id="city-title" class="topbar-title">Город науки</h2>
+          <h2 id="city-title" class="topbar-title">Любознайка</h2>
           <button id="btn-city-info" class="btn-secondary btn-sm" type="button" aria-label="Справка о городе">
             Справка
           </button>
@@ -153,8 +153,8 @@
             ← Назад
           </button>
           <h2 class="topbar-title">Домик совы</h2>
-          <div class="pill pill-now coin-pill" title="Баланс коинов (DP)">
-            <span>Коины:</span>
+          <div class="pill pill-now coin-pill" title="Баланс совиков (DP)">
+            <span>Совики:</span>
             <strong id="owl-coins-balance">0</strong>
           </div>
         </header>
@@ -192,7 +192,7 @@
           </button>
           <button id="btn-open-match3" class="btn-primary btn action-tile" type="button">
             <strong>Три в ряд</strong>
-            <span>Игра на коины</span>
+            <span>Игра на совики</span>
           </button>
         </div>
       </section>
@@ -282,10 +282,10 @@
 
         <div class="filter-chips" id="calendar-filters">
           <button class="btn-secondary btn-sm active" data-cat="all" type="button">Все</button>
-          <button class="btn-secondary btn-sm" data-cat="sport" type="button">Спорт</button>
-          <button class="btn-secondary btn-sm" data-cat="science" type="button">Наука</button>
-          <button class="btn-secondary btn-sm" data-cat="creativity" type="button">Творчество</button>
-          <button class="btn-secondary btn-sm" data-cat="social" type="button">Общество</button>
+          <button class="btn-secondary btn-sm" data-cat="sport" type="button">Качалово</button>
+          <button class="btn-secondary btn-sm" data-cat="science" type="button">Любознайка</button>
+          <button class="btn-secondary btn-sm" data-cat="creativity" type="button">Фантазерск</button>
+          <button class="btn-secondary btn-sm" data-cat="social" type="button">Движняково</button>
         </div>
 
         <div id="calendar-events-list" class="events-list"></div>
@@ -309,7 +309,7 @@
         <div class="rating-league-head">
           <div>
             <h3 id="rating-league-title">Золотая лига</h3>
-            <p id="rating-league-sub">Множитель коинов K = 1.10</p>
+            <p id="rating-league-sub">Множитель совиков K = 1.10</p>
           </div>
           <span class="pill pill-now">Сезон 2026</span>
         </div>
@@ -390,10 +390,10 @@
           <div class="form-group">
             <label class="form-label" for="app-category">Направление</label>
             <select id="app-category" class="form-input">
-              <option value="science">Наука</option>
-              <option value="sport">Спорт</option>
-              <option value="creativity">Творчество</option>
-              <option value="social">Общество</option>
+              <option value="science">Любознайка</option>
+              <option value="sport">Качалово</option>
+              <option value="creativity">Фантазерск</option>
+              <option value="social">Движняково</option>
             </select>
           </div>
           <div class="form-group">
@@ -426,11 +426,6 @@
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="app-proof">Подтверждающий документ</label>
-          <input id="app-proof" class="form-input" type="text" placeholder="Например: Диплом_НК-042.pdf" />
-        </div>
-
         <div id="app-formula-preview" class="formula-preview-box"></div>
         <p id="app-form-error" class="form-error hidden"></p>
 
@@ -504,7 +499,7 @@
         <div class="hud-pill"><span>Очки</span><strong id="m3-score">0</strong></div>
         <div class="hud-pill"><span>Ходы</span><strong id="m3-moves">18</strong></div>
         <div class="hud-pill"><span>Серия</span><strong id="m3-combo">x1</strong></div>
-        <div class="hud-pill hud-coins"><span>Коины</span><strong id="m3-earned">+0</strong></div>
+        <div class="hud-pill hud-coins"><span>Совики</span><strong id="m3-earned">+0</strong></div>
       </div>
 
       <div class="match3-progress-wrap">
@@ -517,7 +512,7 @@
       <div class="match3-footer">
         <button id="btn-m3-hint" class="btn-secondary" type="button">Подсказка</button>
         <button id="btn-m3-restart" class="btn-secondary" type="button">Заново</button>
-        <button id="btn-m3-claim" class="btn-primary" type="button">Забрать коины</button>
+        <button id="btn-m3-claim" class="btn-primary" type="button">Забрать совики</button>
       </div>
     </div>
   </div>
