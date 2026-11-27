@@ -3,65 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Твой мир больших достижений — Профиль студента</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>Астросовье — профиль студента</title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
   <div class="desktop-backdrop">
     <div id="app" class="app-shell">
-      <!-- SCREEN 1: HOME / WORLD -->
+      <!-- ЭКРАН 1: ГЛАВНЫЙ ЭКРАН -->
       <section id="screen-home" class="screen active" aria-label="Главный экран">
-        <header class="home-topbar">
-          <button id="btn-open-search" class="search-pill" type="button">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <span>Найти студента</span>
-          </button>
-          <button id="btn-open-profile" class="avatar-btn" type="button" aria-label="Личный кабинет">
-            <span id="home-avatar-initials">АС</span>
-          </button>
+        <header class="home-topbar glass-header">
+          <div class="brand-mark">
+            <span class="brand-dot" aria-hidden="true"></span>
+            <span class="brand-name">Астросовье</span>
+          </div>
+          <div class="topbar-actions">
+            <button id="btn-open-search" class="btn-secondary btn-sm" type="button" aria-label="Найти студента">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <span>Поиск</span>
+            </button>
+            <button id="btn-open-profile" class="avatar-btn" type="button" aria-label="Личный кабинет">
+              <span id="home-avatar-initials">АС</span>
+            </button>
+          </div>
         </header>
 
         <div class="home-hero">
-          <h1>Твой мир<br />больших достижений</h1>
-          <p class="subtitle">Развивай города — раскрывай себя</p>
+          <h1>Твой мир больших достижений</h1>
+          <p class="subtitle">Развивайте тематические города за реальные достижения и обустраивайте комнату совы</p>
         </div>
 
-        <!-- 4 Thematic Floating Islands -->
+        <!-- 4 тематических острова -->
         <div class="islands-cluster" aria-label="Тематические города">
-          <button class="island-card island-creativity" data-city="creativity" type="button">
+          <button class="card island-card" data-city="creativity" type="button">
             <div class="island-svg-wrap" id="home-svg-creativity"></div>
             <span class="island-label">Творчество</span>
-            <span class="island-lvl-pill" data-city-lvl="creativity">Ур. 0</span>
+            <span class="pill pill-brand" data-city-lvl="creativity">Уровень 0</span>
           </button>
 
-          <button class="island-card island-sport" data-city="sport" type="button">
+          <button class="card island-card" data-city="sport" type="button">
             <div class="island-svg-wrap" id="home-svg-sport"></div>
             <span class="island-label">Спорт</span>
-            <span class="island-lvl-pill" data-city-lvl="sport">Ур. 0</span>
+            <span class="pill pill-brand" data-city-lvl="sport">Уровень 0</span>
           </button>
 
-          <button class="island-card island-social" data-city="social" type="button">
+          <button class="card island-card" data-city="social" type="button">
             <div class="island-svg-wrap" id="home-svg-social"></div>
             <span class="island-label">Общество</span>
-            <span class="island-lvl-pill" data-city-lvl="social">Ур. 0</span>
+            <span class="pill pill-brand" data-city-lvl="social">Уровень 0</span>
           </button>
 
-          <button class="island-card island-science" data-city="science" type="button">
+          <button class="card island-card" data-city="science" type="button">
             <div class="island-svg-wrap" id="home-svg-science"></div>
             <span class="island-label">Наука</span>
-            <span class="island-lvl-pill" data-city-lvl="science">Ур. 0</span>
+            <span class="pill pill-brand" data-city-lvl="science">Уровень 0</span>
           </button>
         </div>
 
-        <div class="home-quick-bar">
+        <div class="card home-quick-bar">
           <div class="quick-stat">
-            <span class="quick-stat-label">Опыт</span>
+            <span class="quick-stat-label">Общий опыт</span>
             <strong id="home-total-xp">0 XP</strong>
           </div>
           <div class="quick-stat-divider"></div>
@@ -77,17 +80,17 @@
         </div>
 
         <footer class="home-bottom-actions">
-          <button id="btn-open-calendar" class="btn-forest" type="button">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <button id="btn-open-calendar" class="btn-secondary btn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="3"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <span>Календарь</span>
+            <span>Афиша</span>
           </button>
-          <button id="btn-open-rating" class="btn-forest" type="button">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <button id="btn-open-rating" class="btn-primary btn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
               <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
               <path d="M4 22h16"></path>
@@ -100,111 +103,120 @@
         </footer>
       </section>
 
-      <!-- SCREEN 2: CITY VIEW -->
+      <!-- ЭКРАН 2: ЭКРАН ГОРОДА -->
       <section id="screen-city" class="screen" aria-label="Экран города">
-        <header class="sub-topbar">
-          <button class="circle-icon-btn" data-back="home" type="button" aria-label="Назад">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <header class="sub-topbar glass-header">
+          <button class="btn-secondary btn-sm" data-back="home" type="button" aria-label="Назад">
+            ← Назад
           </button>
           <h2 id="city-title" class="topbar-title">Город науки</h2>
-          <button id="btn-city-info" class="circle-icon-btn" type="button" aria-label="Информация о городе">
-            <span class="info-letter">i</span>
+          <button id="btn-city-info" class="btn-secondary btn-sm" type="button" aria-label="Справка о городе">
+            Справка
           </button>
         </header>
 
         <div class="city-stage-wrap">
-          <span id="city-stage-badge" class="stage-pill">Стадия 1 · Старт</span>
+          <span id="city-stage-badge" class="pill pill-now">Стадия 1 · Старт</span>
         </div>
 
         <div id="city-island-stage" class="city-island-stage"></div>
 
         <div class="city-districts-wrap">
-          <span id="city-districts-pill" class="districts-pill">0 из 4 районов открыто</span>
+          <span id="city-districts-pill" class="pill pill-brand">0 из 4 районов открыто</span>
         </div>
 
         <div class="card progress-card">
           <div class="progress-card-head">
-            <span class="progress-title">Прогресс города</span>
+            <h3 class="progress-title">Прогресс города</h3>
             <span id="city-xp-fraction" class="progress-fraction">0 / 100 XP</span>
           </div>
           <div class="progress-track">
-            <div id="city-progress-fill" class="progress-fill" style="width: 0%">
-              <span class="progress-knob"></span>
-            </div>
+            <div id="city-progress-fill" class="progress-fill" style="width: 0%"></div>
           </div>
-          <p id="city-to-next" class="progress-caption">До новой стадии — 100 XP</p>
+          <p id="city-to-next" class="progress-caption">До следующей стадии — 100 XP</p>
         </div>
 
         <div class="card milestone-card">
           <strong id="city-next-title">Далее: Библиотека</strong>
-          <span id="city-next-desc">Новые постройки и большой шаг вперёд</span>
+          <span id="city-next-desc">Новые постройки открываются каждые 100 единиц опыта</span>
         </div>
 
-        <button id="btn-enter-owl-house" class="btn-forest full-width" type="button">
-          Войти в домик Совы
+        <button id="btn-enter-owl-house" class="btn-primary btn full-width" type="button">
+          Войти в домик совы
         </button>
       </section>
 
-      <!-- SCREEN 3: OWL'S HOUSE -->
-      <section id="screen-owl" class="screen" aria-label="Домик Совы">
-        <header class="sub-topbar">
-          <button class="circle-icon-btn" data-back="city" type="button" aria-label="Назад">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <!-- ЭКРАН 3: ДОМИК СОВЫ С КАСТОМИЗАЦИЕЙ -->
+      <section id="screen-owl" class="screen" aria-label="Домик совы">
+        <header class="sub-topbar glass-header">
+          <button class="btn-secondary btn-sm" data-back="city" type="button" aria-label="Назад">
+            ← Назад
           </button>
-          <h2 class="topbar-title">Домик Совы</h2>
-          <div class="coin-pill" title="Баланс коинов (DP)">
-            <span class="coin-badge">C</span>
-            <span id="owl-coins-balance">0</span>
+          <h2 class="topbar-title">Домик совы</h2>
+          <div class="pill pill-now coin-pill" title="Баланс коинов (DP)">
+            <span>Коины:</span>
+            <strong id="owl-coins-balance">0</strong>
           </div>
         </header>
 
         <button id="owl-speech-card" class="card speech-card" type="button">
-          <strong id="owl-speech-title">Рада тебя видеть!</strong>
-          <p id="owl-speech-text">Нажми на меня или на «+» в комнате, чтобы обустроить домик.</p>
+          <h3 id="owl-speech-title">Приветствуем в «Астросовье»</h3>
+          <p id="owl-speech-text">Нажмите на сову для подсказки или настройте цвет, свет и интерьер комнаты ниже.</p>
         </button>
 
-        <div class="owl-room-container">
-          <div id="owl-room-svg" class="owl-room-svg"></div>
-          <!-- Interactive hotspots -->
-          <button class="room-hotspot hotspot-chair" data-slot="chair" type="button" aria-label="Кастомизация кресла">+</button>
-          <button class="room-hotspot hotspot-plant" data-slot="plant" type="button" aria-label="Кастомизация растения">+</button>
-          <button class="room-hotspot hotspot-lamp" data-slot="lamp" type="button" aria-label="Кастомизация лампы">+</button>
-          <button class="room-hotspot hotspot-poster" data-slot="poster" type="button" aria-label="Кастомизация плаката">+</button>
+        <div class="card room-stage-card">
+          <div class="owl-room-container">
+            <div id="owl-room-svg" class="owl-room-svg"></div>
+            <button class="room-hotspot hotspot-wall" data-slot="wallColor" type="button" title="Настроить цвет стен" aria-label="Цвет стен">+</button>
+            <button class="room-hotspot hotspot-lamp" data-slot="lighting" type="button" title="Настроить свет" aria-label="Освещение">+</button>
+            <button class="room-hotspot hotspot-chair" data-slot="chair" type="button" title="Настроить кресло" aria-label="Кресло">+</button>
+            <button class="room-hotspot hotspot-plant" data-slot="plant" type="button" title="Настроить растение" aria-label="Растение">+</button>
+            <button class="room-hotspot hotspot-poster" data-slot="poster" type="button" title="Настроить декор стены" aria-label="Декор стены">+</button>
+            <button class="room-hotspot hotspot-rug" data-slot="rug" type="button" title="Настроить ковёр" aria-label="Ковёр">+</button>
+          </div>
+
+          <div class="room-custom-bar" aria-label="Кастомизация комнаты">
+            <button class="btn-secondary btn-sm" data-slot="wallColor" type="button">Цвет</button>
+            <button class="btn-secondary btn-sm" data-slot="lighting" type="button">Свет</button>
+            <button class="btn-secondary btn-sm" data-slot="chair" type="button">Кресло</button>
+            <button class="btn-secondary btn-sm" data-slot="plant" type="button">Растение</button>
+            <button class="btn-secondary btn-sm" data-slot="poster" type="button">Декор</button>
+            <button class="btn-secondary btn-sm" data-slot="rug" type="button">Ковёр</button>
+          </div>
         </div>
 
         <div class="owl-bottom-grid">
-          <button id="btn-open-diary" class="card action-tile light-tile" type="button">
+          <button id="btn-open-diary" class="btn-secondary btn action-tile" type="button">
             <strong>Дневник</strong>
-            <span>Твои достижения</span>
+            <span>Достижения и заявки</span>
           </button>
-          <button id="btn-open-match3" class="card action-tile forest-tile" type="button">
+          <button id="btn-open-match3" class="btn-primary btn action-tile" type="button">
             <strong>Три в ряд</strong>
-            <span>Играй за коины</span>
+            <span>Игра на коины</span>
           </button>
         </div>
       </section>
 
-      <!-- SCREEN 4: PERSONAL PROFILE -->
+      <!-- ЭКРАН 4: ЛИЧНЫЙ КАБИНЕТ -->
       <section id="screen-profile" class="screen" aria-label="Личный кабинет">
-        <header class="sub-topbar">
-          <button class="circle-icon-btn" data-back="home" type="button" aria-label="Назад">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <header class="sub-topbar glass-header">
+          <button class="btn-secondary btn-sm" data-back="home" type="button" aria-label="Назад">
+            ← Назад
           </button>
           <h2 class="topbar-title">Личный кабинет</h2>
-          <button id="btn-edit-profile" class="circle-icon-btn" type="button" aria-label="Настроить профиль">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <button id="btn-edit-profile" class="btn-secondary btn-sm" type="button">
+            Изм.
           </button>
         </header>
 
-        <div class="profile-identity">
+        <div class="card profile-identity">
           <div id="profile-avatar-circle" class="profile-avatar-lg">АС</div>
           <h3 id="profile-nickname" class="profile-name">Алая Сова</h3>
-          <p id="profile-id-line" class="profile-id">ID : 123</p>
-          <p id="profile-schedion-line" class="profile-schedion hidden"></p>
+          <p id="profile-id-line" class="profile-id">ID: 123</p>
         </div>
 
         <div class="card xp-hero-card">
-          <span class="xp-hero-label">Общий опыт</span>
+          <span class="xp-hero-label">Общий опыт в «Астросовье»</span>
           <div class="xp-hero-value">
             <strong id="profile-total-xp">0</strong>
             <span>XP</span>
@@ -215,18 +227,18 @@
         </div>
 
         <div class="profile-stats-row">
-          <button id="btn-profile-to-rating" class="card stat-mini-card sage-card" type="button">
+          <button id="btn-profile-to-rating" class="card stat-mini-card" type="button">
             <span class="stat-mini-label">Место в рейтинге</span>
             <div class="stat-mini-bottom">
               <strong id="profile-rank-global">#1</strong>
-              <span class="arrow-ne">↗</span>
+              <span class="arrow-ne">→</span>
             </div>
           </button>
-          <button id="btn-profile-to-league" class="card stat-mini-card lavender-card" type="button">
+          <button id="btn-profile-to-league" class="card stat-mini-card" type="button">
             <span class="stat-mini-label">Место в лиге</span>
             <div class="stat-mini-bottom">
               <strong id="profile-rank-league">#1</strong>
-              <span class="arrow-ne">↗</span>
+              <span class="arrow-ne">→</span>
             </div>
           </button>
         </div>
@@ -234,163 +246,150 @@
         <div class="card league-banner-card">
           <div id="profile-league-roman" class="league-roman-badge">I</div>
           <div class="league-banner-info">
-            <strong id="profile-league-name">Bronze Owl</strong>
+            <strong id="profile-league-name">Бронзовая лига (Bronze Owl)</strong>
             <span id="profile-league-hint">До следующей лиги — 500 XP</span>
           </div>
         </div>
 
         <div class="profile-actions-stack">
-          <button id="btn-verify-attendance" class="btn-forest full-width" type="button">
-            Подтвердить участие
+          <button id="btn-verify-attendance" class="btn-primary btn full-width" type="button">
+            Подтвердить участие по коду
           </button>
-          <button id="btn-profile-diary" class="btn-outline full-width" type="button">
-            Дневник достижений и заявки
+          <button id="btn-profile-diary" class="btn-secondary btn full-width" type="button">
+            Открыть дневник достижений
           </button>
         </div>
       </section>
 
-      <!-- SCREEN 5: CALENDAR / EVENTS -->
+      <!-- ЭКРАН 5: АФИША СОБЫТИЙ -->
       <section id="screen-calendar" class="screen" aria-label="Афиша событий">
-        <header class="sub-topbar">
-          <button class="circle-icon-btn" data-back="home" type="button" aria-label="Назад">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <header class="sub-topbar glass-header">
+          <button class="btn-secondary btn-sm" data-back="home" type="button" aria-label="Назад">
+            ← Назад
           </button>
           <h2 class="topbar-title">Афиша</h2>
-          <div class="spacer-40"></div>
+          <div class="spacer-60"></div>
         </header>
 
-        <h3 class="section-big-title">События, которые<br />делают тебя сильнее</h3>
+        <h1 class="section-big-title">События кампуса</h1>
 
         <div class="calendar-month-row">
           <strong id="calendar-month-label">Ноябрь 2026</strong>
-          <div class="month-arrows">
-            <button id="cal-prev-week" class="mini-round-btn" type="button" aria-label="Предыдущая неделя">‹</button>
-            <button id="cal-next-week" class="mini-round-btn" type="button" aria-label="Следующая неделя">›</button>
-          </div>
+          <span class="pill pill-now">Текущая неделя</span>
         </div>
 
         <div id="calendar-week-strip" class="week-strip"></div>
 
         <div class="filter-chips" id="calendar-filters">
-          <button class="chip active" data-cat="all" type="button">Все</button>
-          <button class="chip" data-cat="sport" type="button">Спорт</button>
-          <button class="chip" data-cat="science" type="button">Наука</button>
-          <button class="chip" data-cat="creativity" type="button">Творчество</button>
-          <button class="chip" data-cat="social" type="button">Общество</button>
+          <button class="btn-secondary btn-sm active" data-cat="all" type="button">Все</button>
+          <button class="btn-secondary btn-sm" data-cat="sport" type="button">Спорт</button>
+          <button class="btn-secondary btn-sm" data-cat="science" type="button">Наука</button>
+          <button class="btn-secondary btn-sm" data-cat="creativity" type="button">Творчество</button>
+          <button class="btn-secondary btn-sm" data-cat="social" type="button">Общество</button>
         </div>
 
         <div id="calendar-events-list" class="events-list"></div>
       </section>
 
-      <!-- SCREEN 6: RATING & LEAGUES -->
+      <!-- ЭКРАН 6: РЕЙТИНГ И ЛИГИ -->
       <section id="screen-rating" class="screen" aria-label="Рейтинг и лиги">
-        <header class="sub-topbar">
-          <button class="circle-icon-btn" data-back="home" type="button" aria-label="Назад">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <header class="sub-topbar glass-header">
+          <button class="btn-secondary btn-sm" data-back="home" type="button" aria-label="Назад">
+            ← Назад
           </button>
           <h2 class="topbar-title">Рейтинг</h2>
-          <div class="spacer-40"></div>
+          <div class="spacer-60"></div>
         </header>
 
-        <div class="segmented-control">
-          <button id="tab-my-league" class="seg-btn active" type="button">Моя лига</button>
-          <button id="tab-global-rating" class="seg-btn" type="button">Общий рейтинг</button>
+        <div class="segmented rating-segmented">
+          <button id="tab-my-league" class="active" type="button">Моя лига</button>
+          <button id="tab-global-rating" type="button">Общий рейтинг</button>
         </div>
 
         <div class="rating-league-head">
           <div>
             <h3 id="rating-league-title">Золотая лига</h3>
-            <p id="rating-league-sub">До конца семестра · множитель K = 1.10</p>
+            <p id="rating-league-sub">Множитель коинов K = 1.10</p>
           </div>
-          <span class="season-timer-pill">Сезон 2026</span>
+          <span class="pill pill-now">Сезон 2026</span>
         </div>
 
         <div id="rating-podium" class="podium-grid"></div>
         <div id="rating-list" class="rating-list"></div>
 
         <div id="rating-promo-banner" class="card milestone-card">
-          <strong id="rating-promo-title">В следующую лигу — с накоплением опыта</strong>
-          <span id="rating-promo-desc">До следующей лиги осталось 150 XP!</span>
+          <strong id="rating-promo-title">Повышение лиги</strong>
+          <span id="rating-promo-desc">До следующей лиги осталось 150 XP</span>
         </div>
       </section>
     </div>
   </div>
 
-  <!-- MODAL: AUTH / NICKNAME RANDOMIZER + SCHEDION -->
-  <div id="modal-auth" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
-    <div class="modal-sheet">
+  <!-- МОДАЛКА: АВТОРИЗАЦИЯ / ПСЕВДОНИМ (БЕЗ SCHEDION) -->
+  <div id="modal-auth" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <div class="modal-content">
       <div class="modal-head">
-        <h3 id="auth-modal-title">Добро пожаловать!</h3>
-        <button class="close-modal-btn" data-close="modal-auth" type="button" aria-label="Закрыть">✕</button>
+        <h3 id="auth-modal-title">Профиль в «Астросовье»</h3>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-auth" type="button" aria-label="Закрыть">✕</button>
       </div>
-      <p class="modal-desc">Приложение не использует настоящие имена в публичном рейтинге. Выбери псевдоним или сгенерируй случайный, а также при желании подтяни группу из <strong>Schedion</strong>.</p>
+      <p class="modal-desc">В публичном рейтинге вместо настоящего имени используется псевдоним. Выберите готовый вариант с помощью генератора или введите свой.</p>
 
       <div class="form-group">
-        <label for="auth-nickname-input">Твой псевдоним (Прилагательное + Существительное) *</label>
+        <label class="form-label" for="auth-nickname-input">Псевдоним (прилагательное и существительное)</label>
         <div class="input-with-btn">
-          <input id="auth-nickname-input" type="text" placeholder="Например: Звёздное Пёрышко" maxlength="32" />
-          <button id="btn-randomize-nick" class="btn-secondary-sm" type="button" title="Сгенерировать псевдоним">🎲</button>
+          <input id="auth-nickname-input" class="form-input" type="text" placeholder="Например: Звёздное Пёрышко" maxlength="32" />
+          <button id="btn-randomize-nick" class="btn-secondary" type="button">Случайный</button>
         </div>
-        <p id="auth-nick-error" class="form-error hidden">Необходимо заполнить поле псевдонима!</p>
+        <p id="auth-nick-error" class="form-error hidden">Заполните поле псевдонима, чтобы продолжить.</p>
       </div>
 
-      <div class="schedion-box">
-        <div class="schedion-head">
-          <span>Интеграция со Schedion</span>
-          <span class="schedion-badge">ID: 123, 204, 315, 408</span>
-        </div>
-        <div class="input-with-btn">
-          <input id="auth-schedion-id" type="text" placeholder="Введи ID в Schedion (напр. 123)" />
-          <button id="btn-schedion-fetch" class="btn-secondary-sm" type="button">Найти</button>
-        </div>
-        <p id="auth-schedion-result" class="schedion-result"></p>
-      </div>
-
-      <button id="btn-auth-submit" class="btn-forest full-width" type="button">Сохранить профиль</button>
+      <button id="btn-auth-submit" class="btn-primary btn full-width" type="button">Сохранить профиль</button>
     </div>
   </div>
 
-  <!-- MODAL: STUDENT SEARCH -->
-  <div id="modal-search" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="search-modal-title">
-    <div class="modal-sheet">
+  <!-- МОДАЛКА: ПОИСК СТУДЕНТА -->
+  <div id="modal-search" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="search-modal-title">
+    <div class="modal-content">
       <div class="modal-head">
-        <h3 id="search-modal-title">Найти студента</h3>
-        <button class="close-modal-btn" data-close="modal-search" type="button" aria-label="Закрыть">✕</button>
+        <h3 id="search-modal-title">Поиск студента</h3>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-search" type="button" aria-label="Закрыть">✕</button>
       </div>
-      <input id="student-search-input" class="search-modal-input" type="text" placeholder="Введи псевдоним или ID..." />
+      <div class="form-group">
+        <label class="form-label" for="student-search-input">Псевдоним или ID</label>
+        <input id="student-search-input" class="form-input" type="text" placeholder="Например: Изумрудный Порыв или 101" />
+      </div>
       <div id="student-search-results" class="search-results-list"></div>
     </div>
   </div>
 
-  <!-- MODAL: DIARY & ACHIEVEMENTS -->
-  <div id="modal-diary" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="diary-modal-title">
-    <div class="modal-sheet modal-tall">
+  <!-- МОДАЛКА: ДНЕВНИК ДОСТИЖЕНИЙ (БЕЗ МОДЕРАЦИИ) -->
+  <div id="modal-diary" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="diary-modal-title">
+    <div class="modal-content modal-tall">
       <div class="modal-head">
         <h3 id="diary-modal-title">Дневник достижений</h3>
-        <button class="close-modal-btn" data-close="modal-diary" type="button" aria-label="Закрыть">✕</button>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-diary" type="button" aria-label="Закрыть">✕</button>
       </div>
 
-      <div class="segmented-control small-seg">
-        <button class="seg-btn active" data-diary-tab="list" type="button">История</button>
-        <button class="seg-btn" data-diary-tab="create" type="button">+ Заявка</button>
-        <button class="seg-btn" data-diary-tab="mod" type="button">Модерация <span id="mod-pending-count" class="badge-count">0</span></button>
+      <div class="segmented diary-segmented">
+        <button class="active" data-diary-tab="list" type="button">История</button>
+        <button data-diary-tab="create" type="button">Новая заявка</button>
       </div>
 
-      <!-- TAB 1: HISTORY -->
+      <!-- ВКЛАДКА 1: ИСТОРИЯ -->
       <div id="diary-tab-list" class="diary-tab-pane active">
         <div id="diary-items-list" class="diary-list"></div>
       </div>
 
-      <!-- TAB 2: CREATE APPLICATION -->
+      <!-- ВКЛАДКА 2: ПОДАЧА ЗАЯВКИ -->
       <div id="diary-tab-create" class="diary-tab-pane">
         <div class="form-group">
-          <label for="app-title">Название мероприятия *</label>
-          <input id="app-title" type="text" placeholder="Например: Научная конференция АГУ" />
+          <label class="form-label" for="app-title">Название мероприятия</label>
+          <input id="app-title" class="form-input" type="text" placeholder="Например: Научная конференция АГУ" />
         </div>
         <div class="form-row-2">
           <div class="form-group">
-            <label for="app-category">Направление</label>
-            <select id="app-category">
+            <label class="form-label" for="app-category">Направление</label>
+            <select id="app-category" class="form-input">
               <option value="science">Наука</option>
               <option value="sport">Спорт</option>
               <option value="creativity">Творчество</option>
@@ -398,27 +397,27 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="app-level">Уровень (L)</label>
-            <select id="app-level">
+            <label class="form-label" for="app-level">Уровень (L)</label>
+            <select id="app-level" class="form-input">
               <option value="0.25">Внутривузовский (0.25)</option>
               <option value="0.50">Городской (0.50)</option>
               <option value="0.75">Региональный (0.75)</option>
-              <option value="1.00">Всероссийский / Междунар. (1.00)</option>
+              <option value="1.00">Всероссийский (1.00)</option>
             </select>
           </div>
         </div>
         <div class="form-row-2">
           <div class="form-group">
-            <label for="app-activity">Активность (A)</label>
-            <select id="app-activity">
+            <label class="form-label" for="app-activity">Активность (A)</label>
+            <select id="app-activity" class="form-input">
               <option value="1">Участие (1)</option>
-              <option value="2">Значительный вклад / доклад (2)</option>
+              <option value="2">Значительный вклад (2)</option>
               <option value="3">Организация / спикерство (3)</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="app-result">Результат (R)</label>
-            <select id="app-result">
+            <label class="form-label" for="app-result">Результат (R)</label>
+            <select id="app-result" class="form-input">
               <option value="0">Без призового места (0)</option>
               <option value="1">Финалист (1)</option>
               <option value="2">3 место (2)</option>
@@ -428,47 +427,41 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="app-proof">Подтверждение (диплом / бумага)</label>
-          <input id="app-proof" type="text" placeholder="Например: Диплом_НК-042.pdf" />
+          <label class="form-label" for="app-proof">Подтверждающий документ</label>
+          <input id="app-proof" class="form-input" type="text" placeholder="Например: Диплом_НК-042.pdf" />
         </div>
 
         <div id="app-formula-preview" class="formula-preview-box"></div>
         <p id="app-form-error" class="form-error hidden"></p>
 
-        <button id="btn-submit-application" class="btn-forest full-width" type="button">Отправить на модерацию</button>
-      </div>
-
-      <!-- TAB 3: MODERATION SIMULATOR -->
-      <div id="diary-tab-mod" class="diary-tab-pane">
-        <p class="modal-desc">Демо-панель модератора: подтверждай (V = 1) или отклоняй (V = 0) заявки, чтобы проверить начисление AP и DP.</p>
-        <div id="mod-items-list" class="diary-list"></div>
+        <button id="btn-submit-application" class="btn-primary btn full-width" type="button">Отправить заявку</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: 6-DIGIT EVENT CODE VERIFICATION -->
-  <div id="modal-verify-code" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="verify-modal-title">
-    <div class="modal-sheet">
+  <!-- МОДАЛКА: ПОДТВЕРЖДЕНИЕ УЧАСТИЯ ПО 6-ЗНАЧНОМУ КОДУ -->
+  <div id="modal-verify-code" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="verify-modal-title">
+    <div class="modal-content">
       <div class="modal-head">
         <h3 id="verify-modal-title">Подтвердить участие</h3>
-        <button class="close-modal-btn" data-close="modal-verify-code" type="button" aria-label="Закрыть">✕</button>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-verify-code" type="button" aria-label="Закрыть">✕</button>
       </div>
-      <p class="modal-desc">Введи 6-значный код, который организатор показывает на мероприятии. Код обновляется каждые 30 секунд.</p>
+      <p class="modal-desc">Введите 6-значный код, который организатор показывает на мероприятии. Код обновляется каждые 30 секунд.</p>
 
       <div class="form-group">
-        <label for="verify-event-select">Мероприятие</label>
-        <select id="verify-event-select"></select>
+        <label class="form-label" for="verify-event-select">Мероприятие</label>
+        <select id="verify-event-select" class="form-input"></select>
       </div>
 
       <div class="form-group">
-        <label for="verify-code-input">6-значный код</label>
-        <input id="verify-code-input" class="code-input-lg" type="text" inputmode="numeric" maxlength="6" placeholder="000000" />
+        <label class="form-label" for="verify-code-input">Код подтверждения</label>
+        <input id="verify-code-input" class="form-input code-input-lg" type="text" inputmode="numeric" maxlength="6" placeholder="000000" />
         <p id="verify-code-error" class="form-error hidden"></p>
       </div>
 
       <div class="organizer-demo-box">
         <div class="organizer-demo-row">
-          <span>Код организатора (демо):</span>
+          <span>Текущий код организатора (демо):</span>
           <strong id="organizer-live-code" class="live-code-digits">------</strong>
         </div>
         <div class="code-timer-bar">
@@ -477,63 +470,75 @@
         <span id="organizer-code-timer" class="code-timer-text">Обновление через 30 с</span>
       </div>
 
-      <button id="btn-confirm-code" class="btn-forest full-width" type="button">Подтвердить</button>
+      <button id="btn-confirm-code" class="btn-primary btn full-width" type="button">Подтвердить</button>
     </div>
   </div>
 
-  <!-- MODAL: ROOM DECOR SHOP -->
-  <div id="modal-shop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="shop-modal-title">
-    <div class="modal-sheet">
+  <!-- МОДАЛКА: КАСТОМИЗАЦИЯ КОМНАТЫ -->
+  <div id="modal-shop" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="shop-modal-title">
+    <div class="modal-content modal-tall">
       <div class="modal-head">
         <div>
-          <h3 id="shop-modal-title">Декор комнаты</h3>
-          <p id="shop-modal-subtitle" class="modal-subtitle">Выбери предмет для домика</p>
+          <h3 id="shop-modal-title">Кастомизация комнаты</h3>
+          <p id="shop-modal-subtitle" class="modal-subtitle">Выберите оформление и элементы интерьера</p>
         </div>
-        <button class="close-modal-btn" data-close="modal-shop" type="button" aria-label="Закрыть">✕</button>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-shop" type="button" aria-label="Закрыть">✕</button>
       </div>
+      <div id="shop-slot-tabs" class="shop-slot-tabs"></div>
       <div id="shop-items-grid" class="shop-grid"></div>
     </div>
   </div>
 
-  <!-- MODAL: MATCH-3 MINI-GAME -->
-  <div id="modal-match3" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="match3-modal-title">
-    <div class="modal-sheet">
+  <!-- МОДАЛКА: МИНИ-ИГРА ТРИ В РЯД -->
+  <div id="modal-match3" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="match3-modal-title">
+    <div class="modal-content modal-tall">
       <div class="modal-head">
         <div>
           <h3 id="match3-modal-title">Три в ряд</h3>
-          <p class="modal-subtitle">Собирай 3+ в ряд и зарабатывай коины!</p>
+          <p class="modal-subtitle">Собирайте линии от 3 кристаллов, 4 в ряд дают линейный заряд, 5 — звёздный взрыв</p>
         </div>
-        <button class="close-modal-btn" data-close="modal-match3" type="button" aria-label="Закрыть">✕</button>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-match3" type="button" aria-label="Закрыть">✕</button>
       </div>
 
       <div class="match3-hud">
-        <div class="hud-pill">Счёт: <strong id="m3-score">0</strong></div>
-        <div class="hud-pill">Ходы: <strong id="m3-moves">15</strong></div>
-        <div class="hud-pill gold-pill">+<strong id="m3-earned">0</strong> C</div>
+        <div class="hud-pill"><span>Очки</span><strong id="m3-score">0</strong></div>
+        <div class="hud-pill"><span>Ходы</span><strong id="m3-moves">18</strong></div>
+        <div class="hud-pill"><span>Серия</span><strong id="m3-combo">x1</strong></div>
+        <div class="hud-pill hud-coins"><span>Коины</span><strong id="m3-earned">+0</strong></div>
       </div>
+
+      <div class="match3-progress-wrap">
+        <div id="m3-progress-fill" class="match3-progress-fill" style="width: 0%"></div>
+      </div>
+      <p id="m3-status-text" class="match3-status-text">Меняйте местами соседние фишки для сбора комбинаций</p>
 
       <div id="match3-board" class="match3-board" aria-label="Игровое поле Три в ряд"></div>
 
       <div class="match3-footer">
-        <button id="btn-m3-restart" class="btn-outline" type="button">Новая игра</button>
-        <button id="btn-m3-claim" class="btn-forest" type="button">Забрать коины</button>
+        <button id="btn-m3-hint" class="btn-secondary" type="button">Подсказка</button>
+        <button id="btn-m3-restart" class="btn-secondary" type="button">Заново</button>
+        <button id="btn-m3-claim" class="btn-primary" type="button">Забрать коины</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: CITY INFO -->
-  <div id="modal-city-info" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="city-info-title">
-    <div class="modal-sheet">
+  <!-- МОДАЛКА: СПРАВКА О ГОРОДЕ -->
+  <div id="modal-city-info" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="city-info-title">
+    <div class="modal-content">
       <div class="modal-head">
         <h3 id="city-info-title">Развитие города</h3>
-        <button class="close-modal-btn" data-close="modal-city-info" type="button" aria-label="Закрыть">✕</button>
+        <button class="btn-secondary btn-sm close-modal-btn" data-close="modal-city-info" type="button" aria-label="Закрыть">✕</button>
       </div>
-      <p class="modal-desc">Каждые 100 AP в этом направлении открывают новый уровень города (G = ⌊T_AP / 100⌋) и новую тематическую постройку. Опыт не тратится!</p>
+      <p class="modal-desc">Каждые 100 единиц опыта в этом направлении открывают новый уровень города (G = ⌊T_AP / 100⌋) и новую постройку. Накопленный опыт не тратится.</p>
       <div id="city-buildings-list" class="buildings-roadmap"></div>
     </div>
   </div>
 
-  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <!-- УВЕДОМЛЕНИЕ -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite">
+    <span class="toast-dot" aria-hidden="true"></span>
+    <span id="toast-text"></span>
+  </div>
 
   <script type="module" src="/js/app.js"></script>
 </body>

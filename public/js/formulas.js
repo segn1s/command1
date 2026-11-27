@@ -1,6 +1,6 @@
 /**
- * Exact scoring, experience (AP), coins (DP), city level (G), and league (K) formulas
- * from the project specification.
+ * Точные формулы расчёта опыта (AP), коинов (DP), уровня города (G) и лиг,
+ * а также определение сезона интерфейса.
  */
 
 export const LEAGUES = [
@@ -14,29 +14,26 @@ export const LEAGUES = [
 export const CITY_LEVEL_STEP = 100;
 
 /**
- * Returns the league object for a given accumulated T_AP.
- * @param {number} totalAP
+ * Определяет сезон для data-season: сентябрь–ноябрь -> "autumn", иначе "base".
  */
+export function getSeason(date = new Date()) {
+  const month = date.getMonth(); // 0..11
+  return month >= 8 && month <= 10 ? 'autumn' : 'base';
+}
+
 export function getLeagueByAP(totalAP) {
   const ap = Math.max(0, Number(totalAP) || 0);
   return LEAGUES.find((l) => ap >= l.minAP && ap <= l.maxAP) || LEAGUES[0];
 }
 
 /**
- * Computes event rewards using the exact formulas:
- *   A_hat = A / 3
+ * Расчёт наград за мероприятие:
+ *   Â = A / 3
  *   r = R / 3
- *   D_hat = 0.6 * r + 0.4 * L
- *   B = round_0.1(V * 10 * (0.1 + 0.3 * A_hat + 0.6 * D_hat))
+ *   D̂ = 0.6 * r + 0.4 * L
+ *   B = round_0.1(V * 10 * (0.1 + 0.3 * Â + 0.6 * D̂))
  *   AP = round(10 * B)
- *   DP = round(10 * B * K)  [K taken from league BEFORE crediting]
- *
- * @param {Object} params
- * @param {number} params.V - 0 or 1
- * @param {number} params.A - 1, 2, or 3
- * @param {number} params.L - 0.25, 0.50, 0.75, or 1.00
- * @param {number} params.R - 0, 1, 2, 2.5, or 3
- * @param {number} params.currentTotalAP - Student T_AP before this event
+ *   DP = round(B * K)  [уменьшенное начисление коинов с учётом коэффициента лиги K]
  */
 export function calculateEventRewards({ V, A, L, R, currentTotalAP }) {
   const vVal = V ? 1 : 0;
@@ -55,7 +52,7 @@ export function calculateEventRewards({ V, A, L, R, currentTotalAP }) {
   const K = leagueBefore.K;
 
   const AP = Math.round(10 * B);
-  const DP = Math.round(10 * B * K);
+  const DP = vVal ? Math.max(1, Math.round(B * K)) : 0;
 
   return {
     aHat: Math.round(aHat * 100) / 100,
@@ -69,11 +66,6 @@ export function calculateEventRewards({ V, A, L, R, currentTotalAP }) {
   };
 }
 
-/**
- * Computes city level G = floor(cityAP / 100) and progress toward next stage.
- * @param {number} cityAP
- * @param {number} step
- */
 export function getCityLevel(cityAP, step = CITY_LEVEL_STEP) {
   const ap = Math.max(0, Number(cityAP) || 0);
   const G = Math.floor(ap / step);

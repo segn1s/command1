@@ -1,6 +1,6 @@
 /**
- * Static catalogs for cities, decor shop items, upcoming calendar events,
- * mock leaderboard peers, and Schedion student lookup fallback.
+ * Каталоги городов, кастомизации комнаты (цвет, свет, мебель, декор, ковёр),
+ * событий афиши и рейтинга.
  */
 
 export const CITIES = {
@@ -55,36 +55,96 @@ export const CITIES = {
 };
 
 export const DECOR_SHOP = {
+  wallColor: {
+    slotShort: 'Цвет',
+    slotTitle: 'Цвет стен и пола',
+    items: [
+      {
+        id: 'wall-fog',
+        name: 'Светлый туман',
+        price: 0,
+        swatch: '#EBF2FC',
+        wallLeft: '#F4F7FC',
+        wallRight: '#E7EEF9',
+        floor: '#D5DEE8',
+        trim: '#BAC6D6'
+      },
+      {
+        id: 'wall-sand',
+        name: 'Тёплый пергамент',
+        price: 12,
+        swatch: '#F7EBD2',
+        wallLeft: '#FCF5E3',
+        wallRight: '#F4E7C8',
+        floor: '#D9BD96',
+        trim: '#B8986E'
+      },
+      {
+        id: 'wall-sage',
+        name: 'Спокойный шалфей',
+        price: 15,
+        swatch: '#DFECE3',
+        wallLeft: '#EEF6F0',
+        wallRight: '#DFECE3',
+        floor: '#C2D1C6',
+        trim: '#9EB3A4'
+      },
+      {
+        id: 'wall-night',
+        name: 'Ночная обсерватория',
+        price: 22,
+        swatch: '#2C3E66',
+        wallLeft: '#354A78',
+        wallRight: '#293B61',
+        floor: '#4B5570',
+        trim: '#202B45'
+      }
+    ]
+  },
+  lighting: {
+    slotShort: 'Свет',
+    slotTitle: 'Освещение и атмосфера',
+    items: [
+      { id: 'light-day', name: 'Дневной свет', price: 0, swatch: '#C7DBF7', sky: '#B7D4FA', mode: 'day' },
+      { id: 'light-warm', name: 'Тёплая лампа', price: 14, swatch: '#F9D78E', sky: '#8BAAD8', mode: 'warm' },
+      { id: 'light-stars', name: 'Звёздная гирлянда', price: 20, swatch: '#FFE885', sky: '#243B6B', mode: 'stars' },
+      { id: 'light-moon', name: 'Лунное сияние', price: 26, swatch: '#9DB9F0', sky: '#1A274A', mode: 'moon' }
+    ]
+  },
   chair: {
+    slotShort: 'Кресло',
     slotTitle: 'Кресло и уют',
     items: [
-      { id: 'chair-lavender', name: 'Лавандовое кресло', icon: '🪑', price: 0, color: '#B8AEDB' },
-      { id: 'chair-sage', name: 'Шалфейный пуф', icon: '🛋️', price: 150, color: '#9FC4A5' },
-      { id: 'chair-gold', name: 'Кресло-трон', icon: '👑', price: 320, color: '#E8C568' }
+      { id: 'chair-blue', name: 'Синее кресло', price: 0, swatch: '#5E8CE0', color: '#5E8CE0' },
+      { id: 'chair-amber', name: 'Янтарный пуф', price: 12, swatch: '#D4A13E', color: '#D4A13E' },
+      { id: 'chair-violet', name: 'Фиолетовое кресло', price: 18, swatch: '#7C5AC2', color: '#7C5AC2' }
     ]
   },
   plant: {
-    slotTitle: 'Растение',
+    slotShort: 'Растение',
+    slotTitle: 'Растения',
     items: [
-      { id: 'plant-ficus', name: 'Домашний фикус', icon: '🪴', price: 0, color: '#4E8762' },
-      { id: 'plant-hydrangea', name: 'Гортензия', icon: '💐', price: 300, color: '#A389D4' },
-      { id: 'plant-tulip', name: 'Тюльпаны', icon: '🌷', price: 350, color: '#E87A82' }
-    ]
-  },
-  lamp: {
-    slotTitle: 'Освещение',
-    items: [
-      { id: 'lamp-day', name: 'Дневное окно', icon: '🪟', price: 0, color: '#9FD3F2' },
-      { id: 'lamp-warm', name: 'Лампа «Тёплый свет»', icon: '💡', price: 220, color: '#FFD27D' },
-      { id: 'lamp-stars', name: 'Гирлянда звёзд', icon: '✨', price: 400, color: '#FFE885' }
+      { id: 'plant-ficus', name: 'Домашний фикус', price: 0, swatch: '#2E8B57', color: '#2E8B57', variant: 'ficus' },
+      { id: 'plant-bluebell', name: 'Колокольчики', price: 14, swatch: '#4B7BE5', color: '#4B7BE5', variant: 'flowers' },
+      { id: 'plant-astro', name: 'Астро-террариум', price: 22, swatch: '#16A34A', color: '#16A34A', variant: 'terrarium' }
     ]
   },
   poster: {
+    slotShort: 'Декор',
     slotTitle: 'Декор стены',
     items: [
-      { id: 'poster-star', name: 'Рамка со звездой', icon: '🖼️', price: 0, color: '#E8C568' },
-      { id: 'poster-grad', name: 'Диплом почёта', icon: '🎓', price: 250, color: '#6E85B7' },
-      { id: 'poster-owl', name: 'Знамя Совы', icon: '🦉', price: 450, color: '#7A5EA7' }
+      { id: 'poster-star', name: 'Звезда в рамке', price: 0, swatch: '#C99A2E', color: '#C99A2E', variant: 'star' },
+      { id: 'poster-orbit', name: 'Карта созвездий', price: 16, swatch: '#0059DA', color: '#0059DA', variant: 'orbit' },
+      { id: 'poster-banner', name: 'Знамя Астросовья', price: 24, swatch: '#5B21B6', color: '#5B21B6', variant: 'banner' }
+    ]
+  },
+  rug: {
+    slotShort: 'Ковёр',
+    slotTitle: 'Ковёр',
+    items: [
+      { id: 'rug-brand', name: 'Синий овал', price: 0, swatch: '#C7DBF7', outer: '#A3C4F3', inner: '#DCE9FC', pattern: 'plain' },
+      { id: 'rug-amber', name: 'Золотой ковёр', price: 10, swatch: '#F0D78C', outer: '#D4AF4A', inner: '#F4E1A6', pattern: 'rings' },
+      { id: 'rug-orbit', name: 'Орбитальный узор', price: 18, swatch: '#5B21B6', outer: '#6D43C2', inner: '#B8A2E8', pattern: 'orbit' }
     ]
   }
 };
@@ -112,7 +172,7 @@ export const CALENDAR_EVENTS = [
     category: 'science',
     categoryLabel: 'Наука',
     title: 'Научный квиз',
-    location: 'Корпус Б · аудитория 204',
+    location: 'Корпус Б, аудитория 204',
     L: 0.50,
     A: 2,
     R: 2,
@@ -173,10 +233,3 @@ export const MOCK_PEERS = [
   { id: '108', nickname: 'Смелый Навигатор', totalAP: 920, cities: { sport: 420, creativity: 150, science: 200, social: 150 } },
   { id: '109', nickname: 'Лунный Филин', totalAP: 410, cities: { sport: 100, creativity: 110, science: 120, social: 80 } }
 ];
-
-export const MOCK_SCHEDION_FALLBACK = {
-  '123': { id: '123', fullName: 'Иванов Иван Иванович', group: 'ИВТ-21', faculty: 'ФКТИ' },
-  '204': { id: '204', fullName: 'Смирнова Анна Сергеевна', group: 'ПИ-31', faculty: 'ФКТИ' },
-  '315': { id: '315', fullName: 'Козлов Дмитрий Алексеевич', group: 'БТ-12', faculty: 'ФЭА' },
-  '408': { id: '408', fullName: 'Петрова Мария Викторовна', group: 'АД-22', faculty: 'ГФ' }
-};

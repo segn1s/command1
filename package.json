@@ -1,8 +1,8 @@
 {
-  "name": "command1-student-city",
-  "version": "1.0.0",
+  "name": "astrosovye",
+  "version": "1.1.0",
   "private": true,
-  "description": "Геймифицированный профиль студента — виртуальные города достижений на Cloudflare Workers",
+  "description": "Астросовье — геймифицированный профиль студента на Cloudflare Workers",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"

@@ -1,5 +1,6 @@
 import {
   LEAGUES,
+  getSeason,
   calculateEventRewards,
   getLeagueByAP,
   getCityLevel,
@@ -10,8 +11,7 @@ import {
   CITIES,
   DECOR_SHOP,
   CALENDAR_EVENTS,
-  MOCK_PEERS,
-  MOCK_SCHEDION_FALLBACK
+  MOCK_PEERS
 } from './data.js';
 import {
   renderMiniIslandSVG,
@@ -20,12 +20,11 @@ import {
 } from './illustrations.js';
 import { Match3Game } from './match3.js';
 
-const STORAGE_KEY = 'command1_student_city_v1';
-const CODE_SECRET = 'owl-campus-secret-2026';
+const STORAGE_KEY = 'astrosovye_state_v2';
+const CODE_SECRET = 'astrosovye-campus-secret-2026';
 const CODE_PERIOD_SECONDS = 30;
 
 function createInitialState() {
-  // Seed initial achievements so the student starts with a rich, realistic profile
   const seedAchievements = [
     {
       id: 'ach-1',
@@ -37,9 +36,9 @@ function createInitialState() {
       V: 1,
       status: 'approved',
       AP: 70,
-      DP: 70,
+      DP: 7,
       proof: 'Протокол_квиза.pdf',
-      createdAt: '2026-11-18'
+      createdAt: '18.11.2026'
     },
     {
       id: 'ach-2',
@@ -51,9 +50,9 @@ function createInitialState() {
       V: 1,
       status: 'approved',
       AP: 60,
-      DP: 60,
+      DP: 6,
       proof: 'Финиш_протокол.jpg',
-      createdAt: '2026-11-20'
+      createdAt: '20.11.2026'
     },
     {
       id: 'ach-3',
@@ -65,9 +64,9 @@ function createInitialState() {
       V: 1,
       status: 'approved',
       AP: 60,
-      DP: 60,
+      DP: 6,
       proof: 'Сертификат_волонтёра.pdf',
-      createdAt: '2026-11-22'
+      createdAt: '22.11.2026'
     },
     {
       id: 'ach-4',
@@ -79,9 +78,9 @@ function createInitialState() {
       V: 1,
       status: 'approved',
       AP: 72,
-      DP: 72,
+      DP: 7,
       proof: 'Диплом_2место.pdf',
-      createdAt: '2026-11-24'
+      createdAt: '24.11.2026'
     },
     {
       id: 'ach-5',
@@ -93,9 +92,9 @@ function createInitialState() {
       V: 0,
       status: 'pending',
       AP: 84,
-      DP: 84,
+      DP: 8,
       proof: 'Диплом_НК-042.pdf',
-      createdAt: '2026-11-26'
+      createdAt: '26.11.2026'
     }
   ];
 
@@ -103,17 +102,25 @@ function createInitialState() {
     registered: false,
     profile: {
       id: '123',
-      nickname: 'Алая Сова',
-      schedion: null
+      nickname: 'Алая Сова'
     },
-    coinsEarned: 462,
+    coinsEarned: 18,
     coinsSpent: 0,
-    ownedDecor: ['chair-lavender', 'plant-ficus', 'lamp-day', 'poster-star'],
+    ownedDecor: [
+      'wall-fog',
+      'light-day',
+      'chair-blue',
+      'plant-ficus',
+      'poster-star',
+      'rug-brand'
+    ],
     equippedDecor: {
-      chair: 'chair-lavender',
+      wallColor: 'wall-fog',
+      lighting: 'light-day',
+      chair: 'chair-blue',
       plant: 'plant-ficus',
-      lamp: 'lamp-day',
-      poster: 'poster-star'
+      poster: 'poster-star',
+      rug: 'rug-brand'
     },
     achievements: seedAchievements
   };
@@ -124,7 +131,13 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return createInitialState();
     const parsed = JSON.parse(raw);
-    return { ...createInitialState(), ...parsed };
+    const base = createInitialState();
+    return {
+      ...base,
+      ...parsed,
+      equippedDecor: { ...base.equippedDecor, ...(parsed.equippedDecor || {}) },
+      ownedDecor: Array.from(new Set([...base.ownedDecor, ...(parsed.ownedDecor || [])]))
+    };
   } catch {
     return createInitialState();
   }
@@ -137,7 +150,7 @@ let owlMood = 'happy';
 let ratingTab = 'league';
 let calendarSelectedDay = 0;
 let calendarCategory = 'all';
-let currentShopSlot = 'chair';
+let currentShopSlot = 'wallColor';
 let codeTimerHandle = null;
 
 function saveState() {
@@ -160,12 +173,16 @@ function getCoinsBalance() {
   return Math.max(0, state.coinsEarned - state.coinsSpent);
 }
 
-function showToast(msg) {
+function showToast(msg, variant = 'info') {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.remove('hidden');
+  const textEl = document.getElementById('toast-text');
+  textEl.textContent = msg;
+  el.classList.remove('hidden', 'is-success', 'is-error', 'is-warning');
+  if (variant === 'success') el.classList.add('is-success');
+  if (variant === 'error') el.classList.add('is-error');
+  if (variant === 'warning') el.classList.add('is-warning');
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => el.classList.add('hidden'), 2800);
+  showToast._t = setTimeout(() => el.classList.add('hidden'), 3000);
 }
 
 function navigateTo(screenId) {
@@ -188,7 +205,7 @@ function closeModal(id) {
   }
 }
 
-/* ---------- 30-second Rotating 6-digit TOTP ---------- */
+/* ---------- 6-значные коды каждые 30 секунд ---------- */
 async function localGenerateTotp(windowIndex) {
   const data = new TextEncoder().encode(`${CODE_SECRET}:${windowIndex}`);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -202,7 +219,7 @@ async function fetchCurrentCodeInfo() {
     const res = await fetch('/api/code/current');
     if (res.ok) return await res.json();
   } catch {
-    // fallback to local WebCrypto when running without Worker
+    // локальный расчёт без Worker
   }
   const nowSec = Math.floor(Date.now() / 1000);
   const windowIndex = Math.floor(nowSec / CODE_PERIOD_SECONDS);
@@ -223,7 +240,7 @@ async function verifySubmittedCode(submitted) {
       return Boolean(data.valid);
     }
   } catch {
-    // fallback to local WebCrypto
+    // локальный расчёт без Worker
   }
   const nowSec = Math.floor(Date.now() / 1000);
   const currWindow = Math.floor(nowSec / CODE_PERIOD_SECONDS);
@@ -234,7 +251,7 @@ async function verifySubmittedCode(submitted) {
   return submitted === c1 || submitted === c2;
 }
 
-/* ---------- Render Functions ---------- */
+/* ---------- Отрисовка экранов ---------- */
 function renderHome() {
   const totalAP = getTotalAP();
   const league = getLeagueByAP(totalAP);
@@ -251,7 +268,7 @@ function renderHome() {
     const lvlEl = document.querySelector(`[data-city-lvl="${cityId}"]`);
     if (lvlEl) {
       const info = getCityLevel(getCityAP(cityId));
-      lvlEl.textContent = `Ур. ${info.G}`;
+      lvlEl.textContent = `Уровень ${info.G}`;
     }
   });
 }
@@ -277,11 +294,11 @@ function renderCity() {
   document.getElementById('city-progress-fill').style.width =
     `${Math.max(4, Math.round((info.progressInLevel / info.step) * 100))}%`;
   document.getElementById('city-to-next').textContent =
-    `До новой стадии — ${info.toNext} XP`;
+    `До следующей стадии — ${info.toNext} XP`;
 
   const nextBuilding = city.buildings[info.G] || {
-    name: 'Мегаполис открыт!',
-    desc: 'Все районы этого города уже построены'
+    name: 'Все районы построены',
+    desc: 'Максимальная стадия развития города достигнута'
   };
   document.getElementById('city-next-title').textContent =
     info.G < 4 ? `Далее: ${nextBuilding.name}` : nextBuilding.name;
@@ -325,15 +342,7 @@ function renderProfile() {
 
   document.getElementById('profile-avatar-circle').textContent = getInitials(state.profile.nickname);
   document.getElementById('profile-nickname').textContent = state.profile.nickname;
-  document.getElementById('profile-id-line').textContent = `ID : ${state.profile.id}`;
-
-  const schedionEl = document.getElementById('profile-schedion-line');
-  if (state.profile.schedion) {
-    schedionEl.textContent = `Schedion: ${state.profile.schedion.group} · ${state.profile.schedion.faculty}`;
-    schedionEl.classList.remove('hidden');
-  } else {
-    schedionEl.classList.add('hidden');
-  }
+  document.getElementById('profile-id-line').textContent = `ID: ${state.profile.id}`;
 
   document.getElementById('profile-total-xp').textContent = totalAP.toLocaleString('ru-RU');
   const nextLeague = LEAGUES.find((l) => l.minAP > league.minAP);
@@ -348,18 +357,18 @@ function renderProfile() {
   document.getElementById('profile-league-name').textContent = `${league.ruName} (${league.name})`;
   document.getElementById('profile-league-hint').textContent = nextLeague
     ? `До ${nextLeague.ruName.toLowerCase()} осталось ${nextLeague.minAP - totalAP} XP`
-    : 'Максимальная лига достигнута!';
+    : 'Достигнута максимальная лига';
 }
 
 function renderCalendar() {
   const days = [
-    { offset: 0, dow: 'ПТ', num: 27 },
-    { offset: 1, dow: 'СБ', num: 28 },
-    { offset: 2, dow: 'ВС', num: 29 },
-    { offset: 3, dow: 'ПН', num: 30 },
-    { offset: 4, dow: 'ВТ', num: 1 },
-    { offset: 5, dow: 'СР', num: 2 },
-    { offset: 6, dow: 'ЧТ', num: 3 }
+    { offset: 0, dow: 'Пт', num: 27, today: true },
+    { offset: 1, dow: 'Сб', num: 28 },
+    { offset: 2, dow: 'Вс', num: 29 },
+    { offset: 3, dow: 'Пн', num: 30 },
+    { offset: 4, dow: 'Вт', num: 1 },
+    { offset: 5, dow: 'Ср', num: 2 },
+    { offset: 6, dow: 'Чт', num: 3 }
   ];
 
   const strip = document.getElementById('calendar-week-strip');
@@ -367,7 +376,7 @@ function renderCalendar() {
   days.forEach((d) => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = `day-pill ${calendarSelectedDay === d.offset ? 'active' : ''}`;
+    btn.className = `day-pill ${d.today ? 'today' : ''} ${calendarSelectedDay === d.offset ? 'active' : ''}`;
     btn.innerHTML = `<span>${d.dow}</span><strong>${d.num}</strong>`;
     btn.addEventListener('click', () => {
       calendarSelectedDay = d.offset;
@@ -385,15 +394,15 @@ function renderCalendar() {
   const list = document.getElementById('calendar-events-list');
   list.innerHTML = '';
   if (filtered.length === 0) {
-    list.innerHTML = '<div class="card"><p class="modal-desc">На этот день событий по фильтру пока нет. Попробуй выбрать «Все» или другой день.</p></div>';
+    list.innerHTML = '<div class="card"><p class="modal-desc">На выбранный день событий по фильтру нет. Выберите вкладку «Все» или другой день.</p></div>';
     return;
   }
 
   filtered.forEach((ev) => {
     const card = document.createElement('div');
-    card.className = 'event-card';
+    card.className = 'card event-card';
     card.innerHTML = `
-      <div class="event-time-box ${ev.category}">
+      <div class="event-time-box">
         <strong>${ev.time}</strong>
         <span>${ev.dateLabel}</span>
       </div>
@@ -425,7 +434,7 @@ function renderRating() {
   document.getElementById('rating-league-sub').textContent =
     ratingTab === 'league'
       ? `${myLeague.name} · множитель коинов K = ${myLeague.K.toFixed(2)}`
-      : 'Все студенты университета';
+      : 'Все участники «Астросовья»';
 
   const podiumEl = document.getElementById('rating-podium');
   podiumEl.innerHTML = '';
@@ -458,7 +467,7 @@ function renderRating() {
       <div class="rating-row-avatar">${getInitials(student.nickname)}</div>
       <div class="rating-row-info">
         <strong>${student.nickname}</strong>
-        <span>${student.isMe ? 'Твоя позиция' : lg.ruName}</span>
+        <span>${student.isMe ? 'Ваша позиция' : lg.ruName}</span>
       </div>
       <div class="rating-row-xp">${student.totalAP} XP</div>
     `;
@@ -468,10 +477,10 @@ function renderRating() {
   const nextLeague = LEAGUES.find((l) => l.minAP > myLeague.minAP);
   document.getElementById('rating-promo-title').textContent = nextLeague
     ? `Следующая лига: ${nextLeague.ruName}`
-    : 'Ты в высшей лиге Diamond Owl!';
+    : 'Достигнута высшая лига Diamond Owl';
   document.getElementById('rating-promo-desc').textContent = nextLeague
     ? `Ещё ${nextLeague.minAP - totalAP} XP до повышения множителя K = ${nextLeague.K.toFixed(2)}`
-    : 'Максимальный множитель коинов K = 1.20 активен!';
+    : 'Максимальный множитель коинов K = 1.20 активен';
 }
 
 function renderAll() {
@@ -483,83 +492,36 @@ function renderAll() {
   if (activeScreen === 'rating') renderRating();
 }
 
-/* ---------- Diary & Moderation ---------- */
+/* ---------- Дневник (без модерации) ---------- */
 function renderDiary() {
   const listEl = document.getElementById('diary-items-list');
-  const modEl = document.getElementById('mod-items-list');
-  const pending = state.achievements.filter((a) => a.status === 'pending');
-  document.getElementById('mod-pending-count').textContent = String(pending.length);
-
   listEl.innerHTML = '';
+
+  if (state.achievements.length === 0) {
+    listEl.innerHTML = '<p class="modal-desc">В дневнике пока нет записей. Подайте заявку или подтвердите участие на мероприятии.</p>';
+    return;
+  }
+
   [...state.achievements].reverse().forEach((a) => {
     const statusMap = {
-      approved: { cls: 'status-approved', text: 'Подтверждено' },
-      pending: { cls: 'status-pending', text: 'На модерации' },
-      rejected: { cls: 'status-rejected', text: 'Отклонено' }
+      approved: { cls: 'pill-success', text: 'Подтверждено' },
+      pending: { cls: 'pill-warning', text: 'На проверке' },
+      rejected: { cls: 'pill-danger', text: 'Отклонено' }
     };
-    const st = statusMap[a.status];
+    const st = statusMap[a.status] || statusMap.pending;
     const cityName = CITIES[a.category]?.shortName || a.category;
     const item = document.createElement('div');
     item.className = 'diary-item';
     item.innerHTML = `
       <div class="diary-item-top">
         <strong>${a.title}</strong>
-        <span class="status-pill ${st.cls}">${st.text}</span>
+        <span class="pill ${st.cls}">${st.text}</span>
       </div>
       <div class="diary-meta">${cityName} · L=${a.L} · A=${a.A} · R=${a.R} · ${a.proof || 'Без файла'}</div>
-      <div class="diary-meta"><strong>${a.status === 'approved' ? `+${a.AP} XP, +${a.DP} C` : a.status === 'pending' ? `Ожидается ~${a.AP} XP` : '0 XP'}</strong></div>
+      <div class="diary-meta"><strong>${a.status === 'approved' ? `+${a.AP} XP, +${a.DP} коинов` : a.status === 'pending' ? `Расчёт: +${a.AP} XP, +${a.DP} коинов` : '0 XP'}</strong></div>
     `;
     listEl.appendChild(item);
   });
-
-  modEl.innerHTML = '';
-  if (pending.length === 0) {
-    modEl.innerHTML = '<p class="modal-desc">Нет заявок, ожидающих проверки.</p>';
-  } else {
-    pending.forEach((a) => {
-      const item = document.createElement('div');
-      item.className = 'diary-item';
-      item.innerHTML = `
-        <div class="diary-item-top">
-          <strong>${a.title}</strong>
-          <span class="status-pill status-pending">Проверка</span>
-        </div>
-        <div class="diary-meta">${CITIES[a.category]?.shortName} · Файл: ${a.proof || 'Не приложен'}</div>
-        <div class="mod-actions">
-          <button class="btn-approve" type="button">Одобрить (V=1)</button>
-          <button class="btn-reject" type="button">Отклонить (V=0)</button>
-        </div>
-      `;
-      item.querySelector('.btn-approve').addEventListener('click', () => {
-        const res = calculateEventRewards({
-          V: 1,
-          A: a.A,
-          L: a.L,
-          R: a.R,
-          currentTotalAP: getTotalAP()
-        });
-        a.V = 1;
-        a.status = 'approved';
-        a.AP = res.AP;
-        a.DP = res.DP;
-        state.coinsEarned += res.DP;
-        saveState();
-        renderDiary();
-        renderAll();
-        showToast(`Заявка одобрена! +${res.AP} XP и +${res.DP} коинов`);
-      });
-      item.querySelector('.btn-reject').addEventListener('click', () => {
-        a.V = 0;
-        a.status = 'rejected';
-        a.AP = 0;
-        a.DP = 0;
-        saveState();
-        renderDiary();
-        showToast('Заявка отклонена модератором');
-      });
-      modEl.appendChild(item);
-    });
-  }
 }
 
 function updateApplicationPreview() {
@@ -575,54 +537,68 @@ function updateApplicationPreview() {
   });
   document.getElementById('app-formula-preview').innerHTML = `
     <strong>Расчёт по формуле:</strong><br/>
-    D̂ = ${res.dHat} · B = ${res.B} · Коэфф. лиги K = ${res.K.toFixed(2)}<br/>
-    Награда при одобрении: <strong>+${res.AP} XP (AP)</strong> и <strong>+${res.DP} коинов (DP)</strong>
+    D̂ = ${res.dHat} · B = ${res.B} · Коэффициент лиги K = ${res.K.toFixed(2)}<br/>
+    Награда после подтверждения: <strong>+${res.AP} XP</strong> и <strong>+${res.DP} коинов</strong>
   `;
 }
 
-/* ---------- Shop ---------- */
-function openShop(slot) {
-  currentShopSlot = slot;
-  const slotData = DECOR_SHOP[slot];
+/* ---------- Кастомизация комнаты ---------- */
+function openShop(slot = 'wallColor') {
+  currentShopSlot = DECOR_SHOP[slot] ? slot : 'wallColor';
+  const slotData = DECOR_SHOP[currentShopSlot];
   document.getElementById('shop-modal-title').textContent = slotData.slotTitle;
+
+  const tabsEl = document.getElementById('shop-slot-tabs');
+  tabsEl.innerHTML = '';
+  Object.entries(DECOR_SHOP).forEach(([key, cfg]) => {
+    const tabBtn = document.createElement('button');
+    tabBtn.type = 'button';
+    tabBtn.className = `btn-secondary btn-sm ${key === currentShopSlot ? 'active' : ''}`;
+    tabBtn.textContent = cfg.slotShort;
+    tabBtn.addEventListener('click', () => openShop(key));
+    tabsEl.appendChild(tabBtn);
+  });
+
   const grid = document.getElementById('shop-items-grid');
   grid.innerHTML = '';
 
   slotData.items.forEach((item) => {
     const owned = state.ownedDecor.includes(item.id);
-    const equipped = state.equippedDecor[slot] === item.id;
+    const equipped = state.equippedDecor[currentShopSlot] === item.id;
     const card = document.createElement('div');
     card.className = `shop-item-card ${equipped ? 'equipped' : ''}`;
     card.innerHTML = `
-      <div class="shop-item-icon">${item.icon}</div>
+      <span class="swatch-preview" style="background: ${item.swatch};"></span>
       <strong>${item.name}</strong>
-      <span class="diary-meta">${owned ? 'Куплено' : `${item.price} коинов`}</span>
-      <button class="shop-item-btn ${equipped ? 'secondary' : ''}" type="button">
-        ${equipped ? 'Установлено' : owned ? 'Установить' : `Купить (${item.price})`}
+      <span class="diary-meta">${owned ? 'В наличии' : `${item.price} коинов`}</span>
+      <button class="${equipped ? 'btn-secondary' : 'btn-primary'} btn-sm full-width" type="button" ${equipped ? 'disabled' : ''}>
+        ${equipped ? 'Установлено' : owned ? 'Применить' : `Купить (${item.price})`}
       </button>
     `;
     card.querySelector('button').addEventListener('click', () => {
       if (equipped) return;
       if (!owned) {
         if (getCoinsBalance() < item.price) {
-          showToast('Недостаточно коинов! Сыграй в «Три в ряд» или подтверди участие.');
+          showToast('Недостаточно коинов. Заработайте их в игре «Три в ряд» или на мероприятиях.', 'warning');
           return;
         }
         state.coinsSpent += item.price;
         state.ownedDecor.push(item.id);
       }
-      state.equippedDecor[slot] = item.id;
+      state.equippedDecor[currentShopSlot] = item.id;
       saveState();
       renderOwlHouse();
-      openShop(slot);
-      showToast(`Установлено: ${item.name}`);
+      renderHome();
+      openShop(currentShopSlot);
+      showToast(`Оформление обновлено: ${item.name}`, 'success');
     });
     grid.appendChild(card);
   });
+
   openModal('modal-shop');
 }
 
-/* ---------- 6-digit Code Modal ---------- */
+/* ---------- 6-значный код подтверждения ---------- */
 async function refreshLiveCodeBox() {
   const info = await fetchCurrentCodeInfo();
   document.getElementById('organizer-live-code').textContent = info.code;
@@ -651,7 +627,7 @@ function openVerifyModal(preselectEventId = null) {
   codeTimerHandle = setInterval(refreshLiveCodeBox, 1000);
 }
 
-/* ---------- Student Search ---------- */
+/* ---------- Поиск студентов ---------- */
 function renderStudentSearch(query) {
   const q = String(query || '').trim().toLowerCase();
   const resultsEl = document.getElementById('student-search-results');
@@ -660,7 +636,7 @@ function renderStudentSearch(query) {
   );
   resultsEl.innerHTML = '';
   if (all.length === 0) {
-    resultsEl.innerHTML = '<p class="modal-desc">Студенты не найдены.</p>';
+    resultsEl.innerHTML = '<p class="modal-desc">По вашему запросу студенты не найдены.</p>';
     return;
   }
   all.slice(0, 8).forEach((s) => {
@@ -670,7 +646,7 @@ function renderStudentSearch(query) {
     row.innerHTML = `
       <div class="diary-item-top">
         <strong>${s.nickname} (ID: ${s.id})</strong>
-        <span class="status-pill status-approved">${s.totalAP} XP</span>
+        <span class="pill pill-brand">${s.totalAP} XP</span>
       </div>
       <div class="diary-meta">${lg.ruName} · Спорт: ${s.cities.sport} · Наука: ${s.cities.science} · Творчество: ${s.cities.creativity} · Общество: ${s.cities.social}</div>
     `;
@@ -678,9 +654,10 @@ function renderStudentSearch(query) {
   });
 }
 
-/* ---------- Init & Event Wiring ---------- */
+/* ---------- Инициализация ---------- */
 function init() {
-  // Navigation
+  document.documentElement.setAttribute('data-season', getSeason());
+
   document.querySelectorAll('.island-card').forEach((card) => {
     card.addEventListener('click', () => {
       currentCityId = card.dataset.city;
@@ -705,11 +682,10 @@ function init() {
     navigateTo('rating');
   });
 
-  // Owl interaction
   const owlMessages = [
-    ['Отличная работа!', 'Продолжай в том же духе — каждый город ждёт новых открытий! ✨'],
-    ['Совет дня', 'Загляни в афишу событий: подтвердив участие 6-значным кодом, ты сразу получишь XP и коины.'],
-    ['Уютный домик', 'Нажми на «+» рядом с креслом, цветком или лампой, чтобы обновить интерьер!']
+    ['Приветствуем в «Астросовье»', 'Нажмите на сову для совета или настройте цвет стен, свет и мебель комнаты.'],
+    ['Совет по развитию', 'Подтвердите участие в событии из афиши с помощью 6-значного кода, чтобы получить XP и коины.'],
+    ['Оформление комнаты', 'Меняйте цвет стен, освещение и декор с помощью кнопок под комнатой или значков «+».']
   ];
   let owlMsgIdx = 0;
   document.getElementById('owl-speech-card').addEventListener('click', () => {
@@ -720,17 +696,14 @@ function init() {
     renderOwlHouse();
   });
 
-  // Hotspots
-  document.querySelectorAll('.room-hotspot').forEach((btn) => {
+  document.querySelectorAll('[data-slot]').forEach((btn) => {
     btn.addEventListener('click', () => openShop(btn.dataset.slot));
   });
 
-  // Close modals
   document.querySelectorAll('.close-modal-btn').forEach((btn) => {
     btn.addEventListener('click', () => closeModal(btn.dataset.close));
   });
 
-  // Search modal
   document.getElementById('btn-open-search').addEventListener('click', () => {
     renderStudentSearch('');
     openModal('modal-search');
@@ -739,47 +712,15 @@ function init() {
     renderStudentSearch(e.target.value);
   });
 
-  // Auth / Edit profile + Schedion
   const openAuthModal = () => {
     document.getElementById('auth-nickname-input').value = state.profile.nickname;
     document.getElementById('auth-nick-error').classList.add('hidden');
-    document.getElementById('auth-schedion-result').textContent = state.profile.schedion
-      ? `Подключено: ${state.profile.schedion.fullName} (${state.profile.schedion.group})`
-      : '';
     openModal('modal-auth');
   };
   document.getElementById('btn-edit-profile').addEventListener('click', openAuthModal);
   document.getElementById('btn-randomize-nick').addEventListener('click', () => {
     document.getElementById('auth-nickname-input').value = generateRandomNickname();
     document.getElementById('auth-nick-error').classList.add('hidden');
-  });
-
-  document.getElementById('btn-schedion-fetch').addEventListener('click', async () => {
-    const id = document.getElementById('auth-schedion-id').value.trim();
-    const resEl = document.getElementById('auth-schedion-result');
-    if (!id) {
-      resEl.textContent = 'Введи ID студента из Schedion (например: 123).';
-      return;
-    }
-    let student = null;
-    try {
-      const r = await fetch(`/api/schedion/lookup?id=${encodeURIComponent(id)}`);
-      if (r.ok) {
-        const d = await r.json();
-        student = d.student;
-      }
-    } catch {
-      student = MOCK_SCHEDION_FALLBACK[id] || null;
-    }
-    if (!student) student = MOCK_SCHEDION_FALLBACK[id] || null;
-
-    if (student) {
-      state.profile.id = student.id;
-      state.profile.schedion = student;
-      resEl.textContent = `Найдено в Schedion: ${student.fullName}, группа ${student.group} (${student.faculty})`;
-    } else {
-      resEl.textContent = 'Студент не найден в Schedion. Попробуй ID: 123, 204, 315 или 408.';
-    }
   });
 
   document.getElementById('btn-auth-submit').addEventListener('click', () => {
@@ -795,10 +736,9 @@ function init() {
     saveState();
     closeModal('modal-auth');
     renderAll();
-    showToast(`Профиль сохранён: ${nick}`);
+    showToast(`Профиль сохранён: ${nick}`, 'success');
   });
 
-  // Diary & Applications
   const openDiary = () => {
     renderDiary();
     updateApplicationPreview();
@@ -824,7 +764,7 @@ function init() {
     const title = document.getElementById('app-title').value.trim();
     const errEl = document.getElementById('app-form-error');
     if (!title) {
-      errEl.textContent = 'Ошибка: укажи название мероприятия.';
+      errEl.textContent = 'Укажите название мероприятия.';
       errEl.classList.remove('hidden');
       return;
     }
@@ -850,28 +790,28 @@ function init() {
       AP: preview.AP,
       DP: preview.DP,
       proof,
-      createdAt: new Date().toISOString().slice(0, 10)
+      createdAt: new Date().toLocaleDateString('ru-RU')
     });
     saveState();
     document.getElementById('app-title').value = '';
     document.getElementById('app-proof').value = '';
     renderDiary();
-    showToast('Заявка отправлена на модерацию!');
+    document.querySelector('[data-diary-tab="list"]').click();
+    showToast('Заявка отправлена и добавлена в дневник', 'success');
   });
 
-  // Verify 6-digit code
   document.getElementById('btn-verify-attendance').addEventListener('click', () => openVerifyModal());
   document.getElementById('btn-confirm-code').addEventListener('click', async () => {
     const code = document.getElementById('verify-code-input').value.trim();
     const errEl = document.getElementById('verify-code-error');
     if (!/^\d{6}$/.test(code)) {
-      errEl.textContent = 'Введи ровно 6 цифр.';
+      errEl.textContent = 'Введите 6 цифр кода.';
       errEl.classList.remove('hidden');
       return;
     }
     const valid = await verifySubmittedCode(code);
     if (!valid) {
-      errEl.textContent = 'Неверный или устаревший 6-значный код.';
+      errEl.textContent = 'Неверный или устаревший код. Проверьте актуальный код организатора.';
       errEl.classList.remove('hidden');
       return;
     }
@@ -897,27 +837,30 @@ function init() {
       AP: res.AP,
       DP: res.DP,
       proof: 'Код посещения (6 цифр)',
-      createdAt: new Date().toISOString().slice(0, 10)
+      createdAt: new Date().toLocaleDateString('ru-RU')
     });
     state.coinsEarned += res.DP;
     saveState();
     closeModal('modal-verify-code');
     renderAll();
-    showToast(`Участие подтверждено! +${res.AP} XP и +${res.DP} коинов`);
+    showToast(`Участие подтверждено: +${res.AP} XP и +${res.DP} коинов`, 'success');
   });
 
-  // Match-3 Mini-game
   const match3 = new Match3Game({
     boardEl: document.getElementById('match3-board'),
     scoreEl: document.getElementById('m3-score'),
     movesEl: document.getElementById('m3-moves'),
-    earnedEl: document.getElementById('m3-earned')
+    comboEl: document.getElementById('m3-combo'),
+    earnedEl: document.getElementById('m3-earned'),
+    progressEl: document.getElementById('m3-progress-fill'),
+    statusEl: document.getElementById('m3-status-text')
   });
 
   document.getElementById('btn-open-match3').addEventListener('click', () => {
     match3.start();
     openModal('modal-match3');
   });
+  document.getElementById('btn-m3-hint').addEventListener('click', () => match3.highlightHint());
   document.getElementById('btn-m3-restart').addEventListener('click', () => match3.start());
   document.getElementById('btn-m3-claim').addEventListener('click', () => {
     const coins = match3.claimCoins();
@@ -926,23 +869,21 @@ function init() {
       saveState();
       renderOwlHouse();
       renderHome();
-      showToast(`Начислено +${coins} коинов!`);
+      showToast(`Начислено +${coins} коинов`, 'success');
     } else {
-      showToast('Собери комбинации, чтобы заработать коины!');
+      showToast('Наберите минимум 150 очков для получения 1 коина', 'warning');
     }
   });
 
-  // Calendar filters
-  document.querySelectorAll('#calendar-filters .chip').forEach((chip) => {
+  document.querySelectorAll('#calendar-filters button').forEach((chip) => {
     chip.addEventListener('click', () => {
-      document.querySelectorAll('#calendar-filters .chip').forEach((c) => c.classList.remove('active'));
+      document.querySelectorAll('#calendar-filters button').forEach((c) => c.classList.remove('active'));
       chip.classList.add('active');
       calendarCategory = chip.dataset.cat;
       renderCalendar();
     });
   });
 
-  // Rating tabs
   document.getElementById('tab-my-league').addEventListener('click', () => {
     ratingTab = 'league';
     document.getElementById('tab-my-league').classList.add('active');
@@ -956,7 +897,6 @@ function init() {
     renderRating();
   });
 
-  // City Info modal
   document.getElementById('btn-city-info').addEventListener('click', () => {
     const city = CITIES[currentCityId];
     const info = getCityLevel(getCityAP(currentCityId));
@@ -969,10 +909,10 @@ function init() {
       row.className = `roadmap-row ${unlocked ? 'unlocked' : ''}`;
       row.innerHTML = `
         <div>
-          <div>${b.name}</div>
-          <small style="opacity:0.75">${b.desc}</small>
+          <div><strong>${b.name}</strong></div>
+          <div class="roadmap-desc">${b.desc}</div>
         </div>
-        <span>${unlocked ? 'Открыто ✓' : `${b.level * 100} XP`}</span>
+        <span class="pill ${unlocked ? 'pill-success' : 'pill-brand'}">${unlocked ? 'Открыто' : `${b.level * 100} XP`}</span>
       `;
       list.appendChild(row);
     });
